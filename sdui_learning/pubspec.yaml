@@ -1,0 +1,54 @@
+name: sdui_learning
+description: "SDUI learning app — festival screens driven by Firestore."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  firebase_core: ">=3.0.0 <5.0.0"
+  cloud_firestore: ">=5.0.0 <7.0.0"
+  cached_network_image: ^3.4.1
+  google_fonts: ^6.3.2
+  url_launcher: ^6.3.2
+  share_plus: ">=10.0.0 <13.0.0"
+  flutter_riverpod: ^2.6.1
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.7
+  video_player: ">=2.8.0 <3.0.0"
+  rfw: ">=1.0.0 <2.0.0"
+  # Pinned: stac 1.6.0 requires cached_network_image ^4, which conflicts
+  # with this app's cached_network_image ^3.4.1. The demo targets 1.5.0.
+  stac: 1.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ">=4.0.0 <7.0.0"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/sdui/
+    - assets/sdui/stac/
+    - assets/festival_images/
+    - assets/festival_images/diwali/
+    - assets/festival_images/diwali/banners/
+    - assets/festival_images/diwali/categories/
+    - assets/festival_images/diwali/products/
+    - assets/festival_images/navratri/
+    - assets/festival_images/navratri/banners/
+    - assets/festival_images/navratri/categories/
+    - assets/festival_images/navratri/products/
+    - assets/festival_images/holi/
+    - assets/festival_images/holi/banners/
+    - assets/festival_images/holi/categories/
+    - assets/festival_images/holi/products/
+    - assets/festival_images/uttarayan/
+    - assets/festival_images/uttarayan/categories/
+    - assets/festival_images/uttarayan/products/
+    - assets/festival_images/kurtas/

@@ -1,0 +1,517 @@
+{
+  "id": "diwali",
+  "title": "Home · Diwali",
+  "background": "#F7F5F0",
+  "showAppBar": false,
+  "theme": {
+    "primary": "#C8321A",
+    "secondary": "#E8B84B",
+    "background": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "onPrimary": "#FFFFFF",
+    "onBackground": "#14120F"
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "gap": 16,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "diwali_header",
+        "props": {
+          "title": "Delivering to Home",
+          "address": "Satellite, Ahmedabad 380015",
+          "searchHint": "Search diyas, kurtas, gifts",
+          "bgImage": "diwali/topbar.gif",
+          "imageAlignment": "center",
+          "height": 184
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "scroll": true,
+          "padding": { "left": 16, "right": 16 },
+          "gap": 8
+        },
+        "children": [
+          {
+            "type": "chip",
+            "props": {
+              "label": "Diwali",
+              "selected": true
+            }
+          },
+          {
+            "type": "chip",
+            "props": {
+              "label": "Gifts",
+              "selected": false
+            }
+          },
+          {
+            "type": "chip",
+            "props": {
+              "label": "Decor",
+              "selected": false
+            }
+          },
+          {
+            "type": "chip",
+            "props": {
+              "label": "Fashion",
+              "selected": false
+            }
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "margin": { "left": 16, "right": 16 },
+          "radius": 16,
+          "color": "#B4440A",
+          "bgImage": "diwali/banners/hero.jpg",
+          "imageDim": true,
+          "fit": "cover",
+          "height": 170,
+          "padding": 20,
+          "alignment": "bottomLeft"
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": {
+              "mainAxisAlignment": "end",
+              "crossAxisAlignment": "start",
+              "gap": 6
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "DIWALI SALE",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Light up the home\nUp to 60% off",
+                  "fontSize": 24,
+                  "bold": true,
+                  "height": 1.1,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 8,
+          "expandChildren": true
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": {
+              "color": "#FFFFFF",
+              "radius": 14,
+              "padding": 12,
+              "alignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Under\n₹499",
+                  "fontSize": 14,
+                  "bold": true,
+                  "align": "center",
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "color": "#FFFFFF",
+              "radius": 14,
+              "padding": 12,
+              "alignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Under\n₹999",
+                  "fontSize": 14,
+                  "bold": true,
+                  "align": "center",
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "color": "#FFFFFF",
+              "radius": 14,
+              "padding": 12,
+              "alignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Under\n₹1999",
+                  "fontSize": 14,
+                  "bold": true,
+                  "align": "center",
+                  "color": "#14120F"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "margin": { "left": 16, "right": 16 },
+          "color": "#FFFFFF",
+          "radius": 14,
+          "padding": 12
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": {
+              "crossAxisAlignment": "stretch",
+              "gap": 10
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Shop by category",
+                  "fontSize": 16,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              },
+              {
+                "type": "grid",
+                "props": {
+                  "crossAxisCount": 4,
+                  "gap": 8,
+                  "childAspectRatio": 0.72
+                },
+                "children": [
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/kurtas.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Kurtas", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/sarees.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Sarees", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/diyas.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Diyas", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/gift_sets.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Gift sets", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/jewellery.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Jewellery", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/lights.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Lights", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/menswear.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Menswear", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "image",
+                        "props": {
+                          "imageUrl": "diwali/categories/kids.jpg",
+                          "height": 64,
+                          "radius": 10,
+                          "fit": "cover"
+                        }
+                      },
+                      { "type": "text", "props": { "value": "Kids", "fontSize": 12, "bold": true, "align": "center", "color": "#14120F" } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 8
+        },
+        "children": [
+          {
+            "type": "row",
+            "props": {
+              "mainAxisAlignment": "spaceBetween",
+              "crossAxisAlignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Diwali picks",
+                  "fontSize": 16,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "See all",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#5A554C"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "props": {
+              "scroll": true,
+              "gap": 10
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 140,
+                  "imageHeight": 120,
+                  "imageUrl": "diwali/products/silk_festive_kurta.jpg",
+                  "brand": "Brand A",
+                  "title": "Silk festive kurta",
+                  "price": "₹799",
+                  "originalPrice": "₹1599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 140,
+                  "imageHeight": 120,
+                  "imageUrl": "diwali/products/brass_diya_set.jpg",
+                  "brand": "Brand B",
+                  "title": "Brass diya set",
+                  "price": "₹1299",
+                  "originalPrice": "₹2599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 140,
+                  "imageHeight": 120,
+                  "imageUrl": "diwali/products/gold_tone_watch.jpg",
+                  "brand": "Brand C",
+                  "title": "Gold tone watch",
+                  "price": "₹999",
+                  "originalPrice": "₹1999",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 8
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "value": "Festive gifts",
+              "fontSize": 16,
+              "bold": true,
+              "color": "#14120F"
+            }
+          },
+          {
+            "type": "grid",
+            "props": {
+              "crossAxisCount": 2,
+              "gap": 10,
+              "childAspectRatio": 0.65
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 170,
+                  "imageUrl": "diwali/products/embroidered_kurta.jpg",
+                  "brand": "Brand D",
+                  "title": "Embroidered kurta",
+                  "price": "₹899",
+                  "originalPrice": "₹1799",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 170,
+                  "imageUrl": "diwali/products/fairy_light_set.jpg",
+                  "brand": "Brand E",
+                  "title": "Fairy light set",
+                  "price": "₹399",
+                  "originalPrice": "₹799",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 170,
+                  "imageUrl": "diwali/products/nehru_jacket.jpg",
+                  "brand": "Brand F",
+                  "title": "Nehru jacket",
+                  "price": "₹1499",
+                  "originalPrice": "₹2999",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 170,
+                  "imageUrl": "diwali/products/potli_bag.jpg",
+                  "brand": "Brand G",
+                  "title": "Potli bag",
+                  "price": "₹599",
+                  "originalPrice": "₹1199",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

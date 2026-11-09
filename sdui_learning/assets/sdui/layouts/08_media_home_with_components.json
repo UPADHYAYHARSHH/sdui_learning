@@ -1,0 +1,293 @@
+{
+  "id": "layout_demo",
+  "title": "Home · Search + GIF + Video",
+  "background": "#0F0F12",
+  "components": {
+    "promo_banner": {
+      "type": "container",
+      "props": {
+        "padding": 16,
+        "radius": 16,
+        "gradient": {
+          "colors": ["#C45C26", "#7B1E3A"],
+          "begin": "centerLeft",
+          "end": "centerRight"
+        }
+      },
+      "children": [
+        {
+          "type": "column",
+          "props": { "gap": 6 },
+          "children": [
+            {
+              "type": "text",
+              "props": {
+                "value": "{{title}}",
+                "fontSize": 18,
+                "bold": true,
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "type": "text",
+              "props": {
+                "value": "{{subtitle}}",
+                "fontSize": 13,
+                "color": "#FFE8D6"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "icon_tile": {
+      "type": "column",
+      "props": {
+        "gap": 6,
+        "crossAxisAlignment": "center"
+      },
+      "children": [
+        {
+          "type": "icon",
+          "props": {
+            "name": "{{icon}}",
+            "size": 22,
+            "background": "#1E1E24",
+            "box": 48,
+            "radius": 14,
+            "color": "#E8B84B"
+          }
+        },
+        {
+          "type": "text",
+          "props": {
+            "value": "{{label}}",
+            "fontSize": 12,
+            "color": "#B0B0B0",
+            "align": "center"
+          }
+        }
+      ]
+    }
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "padding": 16,
+      "gap": 16,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "row",
+        "props": {
+          "gap": 10,
+          "crossAxisAlignment": "center"
+        },
+        "children": [
+          {
+            "type": "expanded",
+            "children": [
+              {
+                "type": "search_bar",
+                "props": {
+                  "hint": "Search festivals, deals…",
+                  "height": 48
+                }
+              }
+            ]
+          },
+          {
+            "type": "icon",
+            "props": {
+              "name": "notifications",
+              "background": "#1E1E24",
+              "box": 48,
+              "radius": 14
+            }
+          },
+          {
+            "type": "icon",
+            "props": {
+              "name": "cart",
+              "background": "#1E1E24",
+              "box": 48,
+              "radius": 14
+            }
+          }
+        ]
+      },
+      {
+        "type": "component",
+        "props": {
+          "id": "promo_banner",
+          "data": {
+            "title": "Diwali Mega Sale",
+            "subtitle": "Up to 40% off — configured in Firestore"
+          }
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "gap": 20,
+          "mainAxisAlignment": "spaceAround"
+        },
+        "children": [
+          {
+            "type": "component",
+            "props": {
+              "id": "icon_tile",
+              "data": { "icon": "gift", "label": "Gifts" }
+            }
+          },
+          {
+            "type": "component",
+            "props": {
+              "id": "icon_tile",
+              "data": { "icon": "star", "label": "Deals" }
+            }
+          },
+          {
+            "type": "component",
+            "props": {
+              "id": "icon_tile",
+              "data": { "icon": "favorite", "label": "Saved" }
+            }
+          },
+          {
+            "type": "component",
+            "props": {
+              "id": "icon_tile",
+              "data": { "icon": "home", "label": "Home" }
+            }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Animated GIF",
+          "fontSize": 16,
+          "bold": true,
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "type": "gif",
+        "props": {
+          "url": "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif",
+          "height": 160,
+          "radius": 14,
+          "fit": "cover"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Video section",
+          "fontSize": 16,
+          "bold": true,
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "type": "video",
+        "props": {
+          "url": "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+          "height": 200,
+          "radius": 14,
+          "autoplay": false,
+          "looping": true,
+          "muted": true,
+          "fit": "cover"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Product row (generic composition — no Dart class)",
+          "fontSize": 14,
+          "color": "#B0B0B0"
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "gap": 12,
+          "scroll": true
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": {
+              "width": 140,
+              "color": "#1E1E24",
+              "radius": 12,
+              "padding": 8
+            },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8 },
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "url": "https://picsum.photos/seed/p1/300/300",
+                      "height": 100,
+                      "radius": 8
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Lamp Set",
+                      "color": "#FFFFFF",
+                      "fontSize": 13,
+                      "bold": true
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "width": 140,
+              "color": "#1E1E24",
+              "radius": 12,
+              "padding": 8
+            },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8 },
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "url": "https://picsum.photos/seed/p2/300/300",
+                      "height": 100,
+                      "radius": 8
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Rangoli Kit",
+                      "color": "#FFFFFF",
+                      "fontSize": 13,
+                      "bold": true
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "id": "uttarayan",
+  "title": "Home · Uttarayan",
+  "background": "#F7F5F0",
+  "showAppBar": false,
+  "theme": {
+    "primary": "#0B4A6B",
+    "secondary": "#F2C14E",
+    "background": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "onPrimary": "#FFFFFF",
+    "onBackground": "#14120F"
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "gap": 8,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "uttarayan_header",
+        "props": {
+          "title": "Delivering to Home",
+          "address": "Satellite, Ahmedabad 380015",
+          "searchHint": "Search kites, manja, sunglasses",
+          "bgImage": "uttarayan/topbar_kites_v2.gif",
+          "bgColor": "#0B4A6B",
+          "imageAlignment": "center",
+          "height": 170
+        }
+      },
+      {
+        "type": "countdown_card",
+        "props": {
+          "title": "Kite day starts in",
+          "subtitle": "Order before the rush",
+          "targetDate": "2027-01-14T06:00:00",
+          "badgeColor": "#0B4A6B"
+        }
+      },
+      {
+        "type": "grid",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "crossAxisCount": 3,
+          "gap": 6,
+          "childAspectRatio": 1.45
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": {
+              "height": 72,
+              "radius": 10,
+              "color": "#EBDDB0",
+              "bgImage": "uttarayan/categories/kites_v2.jpg",
+              "imageDim": true,
+              "fit": "cover",
+              "padding": 8,
+              "alignment": "topLeft"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Kites",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "height": 72,
+              "radius": 10,
+              "color": "#C9D8CF",
+              "bgImage": "uttarayan/categories/manja_v2.jpg",
+              "imageDim": true,
+              "fit": "cover",
+              "padding": 8,
+              "alignment": "topLeft"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Manja",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "height": 72,
+              "radius": 10,
+              "color": "#D9D3EA",
+              "bgImage": "uttarayan/categories/shades_v2.jpg",
+              "imageDim": true,
+              "fit": "cover",
+              "padding": 8,
+              "alignment": "topLeft"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Shades",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "height": 72,
+              "radius": 10,
+              "color": "#E9C9B8",
+              "bgImage": "uttarayan/categories/caps_v2.jpg",
+              "imageDim": true,
+              "fit": "cover",
+              "padding": 8,
+              "alignment": "topLeft"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Caps",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "height": 72,
+              "radius": 10,
+              "color": "#C9D8CF",
+              "bgImage": "uttarayan/categories/jackets_v2.jpg",
+              "imageDim": true,
+              "fit": "cover",
+              "padding": 8,
+              "alignment": "topLeft"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Jackets",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "height": 72,
+              "radius": 10,
+              "color": "#EBDDB0",
+              "bgImage": "uttarayan/categories/snacks_v2.jpg",
+              "imageDim": true,
+              "fit": "cover",
+              "padding": 8,
+              "alignment": "topLeft"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Snacks",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 6
+        },
+        "children": [
+          {
+            "type": "row",
+            "props": {
+              "mainAxisAlignment": "spaceBetween",
+              "crossAxisAlignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Kite day picks",
+                  "fontSize": 15,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "See all",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#5A554C"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "props": {
+              "scroll": true,
+              "gap": 8
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 164,
+                  "imageHeight": 140,
+                  "imageUrl": "uttarayan/products/patang_kite_pack_v2.jpg",
+                  "imageColor": "#EBDDB0",
+                  "brand": "Pankh Patang",
+                  "title": "Patang kite pack (50 pcs)",
+                  "price": "₹199",
+                  "originalPrice": "₹399",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 164,
+                  "imageHeight": 140,
+                  "imageUrl": "uttarayan/products/cotton_manja_reel_v2.jpg",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Bareilly Manja",
+                  "title": "Cotton manja reel (9 cord)",
+                  "price": "₹349",
+                  "originalPrice": "₹699",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 164,
+                  "imageHeight": 140,
+                  "imageUrl": "uttarayan/products/uv_sunglasses_v2.jpg",
+                  "imageColor": "#D9D3EA",
+                  "brand": "SkyShield",
+                  "title": "Polarized UV sunglasses",
+                  "price": "₹499",
+                  "originalPrice": "₹999",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 6
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "value": "Kite combos",
+              "fontSize": 15,
+              "bold": true,
+              "color": "#14120F"
+            }
+          },
+          {
+            "type": "combo_card",
+            "props": {
+              "imageUrl": "uttarayan/products/starter_combo_v2.jpg",
+              "imageColor": "#EBDDB0",
+              "title": "Starter combo",
+              "subtitle": "10 Kites + 1 Manja Firki Reel",
+              "price": "₹499",
+              "originalPrice": "₹999",
+              "buttonText": "Add"
+            }
+          },
+          {
+            "type": "combo_card",
+            "props": {
+              "imageUrl": "uttarayan/products/terrace_party_combo_v2.jpg",
+              "imageColor": "#C9D8CF",
+              "title": "Terrace party combo",
+              "subtitle": "50 Kites + 2 Reels + Speaker & Shades",
+              "price": "₹1,299",
+              "originalPrice": "₹2,599",
+              "buttonText": "Add"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

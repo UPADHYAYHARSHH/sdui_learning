@@ -1,0 +1,23 @@
+{
+  "products": [
+    "bucket_cap_v3.jpg",
+    "herbal_colour_set_v3.jpg",
+    "holi_kurta_set_v3.jpg",
+    "sunscreen_kit_v3.jpg",
+    "water_pichkari_v3.jpg",
+    "white_cotton_tee_v3.jpg"
+  ],
+  "categories": [
+    "kids_v3.jpg",
+    "looks_v3.jpg",
+    "party_v3.jpg",
+    "safe_play_v3.jpg",
+    "skin_care_v3.jpg"
+  ],
+  "banners": [
+    "mosaic_colour_up_v3.jpg",
+    "mosaic_herbal_colours_v3.jpg",
+    "mosaic_white_tees_v3.jpg"
+  ],
+  "topbar": "topbar_holi_v3.gif"
+}

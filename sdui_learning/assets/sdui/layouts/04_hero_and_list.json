@@ -1,0 +1,51 @@
+{
+  "id": "layout_demo",
+  "title": "04 · Hero + list",
+  "background": "#140F0A",
+  "root": {
+    "type": "column",
+    "props": { "padding": 0, "gap": 0, "crossAxisAlignment": "stretch" },
+    "children": [
+      {
+        "type": "image",
+        "props": {
+          "url": "https://images.unsplash.com/photo-1574607383476-f517f260d9b1?w=1200&q=80",
+          "height": 220,
+          "radius": 0
+        }
+      },
+      {
+        "type": "padding",
+        "props": { "padding": 20 },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 12, "crossAxisAlignment": "stretch" },
+            "children": [
+              {
+                "type": "text",
+                "props": { "value": "04 — Hero banner + list", "fontSize": 24, "bold": true, "color": "#FFFFFF" }
+              },
+              {
+                "type": "text",
+                "props": { "value": "• Light diyas at dusk", "fontSize": 15, "color": "#E8B84B" }
+              },
+              {
+                "type": "text",
+                "props": { "value": "• Share sweets with family", "fontSize": 15, "color": "#E8B84B" }
+              },
+              {
+                "type": "text",
+                "props": { "value": "• Keep the entrance bright", "fontSize": 15, "color": "#E8B84B" }
+              },
+              {
+                "type": "button",
+                "props": { "label": "Continue" }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

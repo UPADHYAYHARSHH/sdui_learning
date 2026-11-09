@@ -1,0 +1,445 @@
+{
+  "id": "holi",
+  "title": "Home · Holi",
+  "background": "#F7F5F0",
+  "showAppBar": false,
+  "theme": {
+    "primary": "#7A2FB5",
+    "secondary": "#E4357A",
+    "background": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "onPrimary": "#FFFFFF",
+    "onBackground": "#14120F"
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "gap": 8,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "holi_header",
+        "props": {
+          "title": "Delivering to Home",
+          "address": "Satellite, Ahmedabad 380015",
+          "searchHint": "Search colours, white tees, pichkari",
+          "bgImage": "holi/topbar_holi_v3.gif",
+          "bgColor": "#2A1245",
+          "imageAlignment": "center",
+          "height": 170
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "scroll": true,
+          "padding": { "left": 16, "right": 16, "top": 2, "bottom": 4 },
+          "gap": 14
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 60,
+                  "height": 60,
+                  "radius": 30,
+                  "borderWidth": 2.5,
+                  "borderColor": "#7A2FB5",
+                  "color": "#E9C9B8",
+                  "bgImage": "holi/categories/looks_v3.jpg",
+                  "fit": "cover"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Looks",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 60,
+                  "height": 60,
+                  "radius": 30,
+                  "borderWidth": 2.5,
+                  "borderColor": "#7A2FB5",
+                  "color": "#C9D8CF",
+                  "bgImage": "holi/categories/safe_play_v3.jpg",
+                  "fit": "cover"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Safe play",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 60,
+                  "height": 60,
+                  "radius": 30,
+                  "borderWidth": 2.5,
+                  "borderColor": "#7A2FB5",
+                  "color": "#D9D3EA",
+                  "bgImage": "holi/categories/skin_care_v3.jpg",
+                  "fit": "cover"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Skin care",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 60,
+                  "height": 60,
+                  "radius": 30,
+                  "borderWidth": 2.5,
+                  "borderColor": "#7A2FB5",
+                  "color": "#EBDDB0",
+                  "bgImage": "holi/categories/party_v3.jpg",
+                  "fit": "cover"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Party",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 60,
+                  "height": 60,
+                  "radius": 30,
+                  "borderWidth": 2.5,
+                  "borderColor": "#7A2FB5",
+                  "color": "#E9C9B8",
+                  "bgImage": "holi/categories/kids_v3.jpg",
+                  "fit": "cover"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Kids",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 8,
+          "height": 185
+        },
+        "children": [
+          {
+            "type": "expanded",
+            "props": { "flex": 6 },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "height": 185,
+                  "radius": 14,
+                  "color": "#7A2FB5",
+                  "bgImage": "holi/banners/mosaic_colour_up_v3.jpg",
+                  "imageDim": true,
+                  "fit": "cover",
+                  "padding": 12,
+                  "alignment": "bottomLeft"
+                },
+                "children": [
+                  {
+                    "type": "column",
+                    "props": {
+                      "mainAxisAlignment": "end",
+                      "crossAxisAlignment": "start",
+                      "gap": 2
+                    },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Colour up",
+                          "fontSize": 20,
+                          "bold": true,
+                          "color": "#FFFFFF"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Up to 50% off",
+                          "fontSize": 12,
+                          "fontWeight": "w500",
+                          "color": "#FFFFFF"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "expanded",
+            "props": { "flex": 5 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8 },
+                "children": [
+                  {
+                    "type": "container",
+                    "props": {
+                      "height": 88,
+                      "radius": 14,
+                      "color": "#EBDDB0",
+                      "bgImage": "holi/banners/mosaic_white_tees_v3.jpg",
+                      "imageDim": true,
+                      "fit": "cover",
+                      "padding": 10,
+                      "alignment": "topLeft"
+                    },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "White tees",
+                          "fontSize": 14,
+                          "bold": true,
+                          "color": "#FFFFFF"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "props": {
+                      "height": 89,
+                      "radius": 14,
+                      "color": "#C9D8CF",
+                      "bgImage": "holi/banners/mosaic_herbal_colours_v3.jpg",
+                      "imageDim": true,
+                      "fit": "cover",
+                      "padding": 10,
+                      "alignment": "topLeft"
+                    },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Herbal colours",
+                          "fontSize": 14,
+                          "bold": true,
+                          "color": "#FFFFFF"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 6
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "value": "Holi must haves",
+              "fontSize": 16,
+              "bold": true,
+              "color": "#14120F"
+            }
+          },
+          {
+            "type": "grid",
+            "props": {
+              "crossAxisCount": 3,
+              "gap": 8,
+              "childAspectRatio": 0.62
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 76,
+                  "imageUrl": "holi/products/white_cotton_tee_v3.jpg",
+                  "imageColor": "#E9C9B8",
+                  "brand": "Holi Drip",
+                  "title": "White cotton tee",
+                  "price": "₹299",
+                  "originalPrice": "₹599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 76,
+                  "imageUrl": "holi/products/herbal_colour_set_v3.jpg",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Rangoli",
+                  "title": "Herbal colour set",
+                  "price": "₹199",
+                  "originalPrice": "₹399",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 76,
+                  "imageUrl": "holi/products/water_pichkari_v3.jpg",
+                  "imageColor": "#D9D3EA",
+                  "brand": "AquaBlast",
+                  "title": "Pressure pichkari",
+                  "price": "₹149",
+                  "originalPrice": "₹299",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 76,
+                  "imageUrl": "holi/products/holi_kurta_set_v3.jpg",
+                  "imageColor": "#EBDDB0",
+                  "brand": "Manyavar",
+                  "title": "Holi kurta set",
+                  "price": "₹799",
+                  "originalPrice": "₹1599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 76,
+                  "imageUrl": "holi/products/sunscreen_kit_v3.jpg",
+                  "imageColor": "#E9C9B8",
+                  "brand": "DermaCare",
+                  "title": "Sun & skin shield",
+                  "price": "₹349",
+                  "originalPrice": "₹699",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 76,
+                  "imageUrl": "holi/products/bucket_cap_v3.jpg",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Festive Club",
+                  "title": "Water bucket cap",
+                  "price": "₹199",
+                  "originalPrice": "₹399",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "margin": { "left": 16, "right": 16, "bottom": 12 },
+          "radius": 14,
+          "color": "#7A2FB5",
+          "padding": 16
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "start" },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Skin and hair care combos",
+                  "fontSize": 16,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Flat 30% off, protect before you play",
+                  "fontSize": 12,
+                  "fontWeight": "w500",
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

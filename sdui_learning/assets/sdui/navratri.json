@@ -1,0 +1,488 @@
+{
+  "id": "navratri",
+  "title": "Home · Navratri",
+  "background": "#F7F5F0",
+  "showAppBar": false,
+  "theme": {
+    "primary": "#C8321A",
+    "secondary": "#F2C14E",
+    "background": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "onPrimary": "#FFFFFF",
+    "onBackground": "#14120F"
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "gap": 16,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "navratri_header",
+        "props": {
+          "title": "Delivering to Home",
+          "address": "Satellite, Ahmedabad 380015",
+          "searchHint": "Search chaniya choli, jewellery",
+          "bgImage": "navratri/topbar_animated_v6.gif",
+          "bgColor": "#2B0B1E",
+          "imageAlignment": "center",
+          "height": 184
+        }
+      },
+      {
+        "type": "nine_colours",
+        "props": {
+          "title": "Nine nights, nine colours",
+          "colors": [
+            "#E8731A",
+            "#FFFFFF",
+            "#C8321A",
+            "#2A5BD7",
+            "#F2C14E",
+            "#1B7A3A",
+            "#8A8A8A",
+            "#7A2FB5",
+            "#0B7A75"
+          ]
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 12,
+          "expandChildren": true
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": {
+              "height": 165,
+              "radius": 14,
+              "color": "#A3174F",
+              "bgImage": "navratri/banners/banner_her_garba_look.jpg",
+              "imageAlignment": "topCenter",
+              "fit": "cover",
+              "padding": 14,
+              "alignment": "bottomLeft"
+            },
+            "children": [
+              {
+                "type": "column",
+                "props": {
+                  "mainAxisAlignment": "end",
+                  "crossAxisAlignment": "start",
+                  "gap": 2
+                },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Her Garba look",
+                      "fontSize": 18,
+                      "bold": true,
+                      "shadow": true,
+                      "color": "#FFFFFF"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Up to 55% off",
+                      "fontSize": 12,
+                      "fontWeight": "w500",
+                      "shadow": true,
+                      "color": "#FFFFFF"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "height": 165,
+              "radius": 14,
+              "color": "#1D4E89",
+              "bgImage": "navratri/banners/banner_his_kediyu_look.jpg",
+              "imageAlignment": "topCenter",
+              "fit": "cover",
+              "padding": 14,
+              "alignment": "bottomLeft"
+            },
+            "children": [
+              {
+                "type": "column",
+                "props": {
+                  "mainAxisAlignment": "end",
+                  "crossAxisAlignment": "start",
+                  "gap": 2
+                },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "His Kediyu look",
+                      "fontSize": 18,
+                      "bold": true,
+                      "shadow": true,
+                      "color": "#FFFFFF"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Up to 50% off",
+                      "fontSize": 12,
+                      "fontWeight": "w500",
+                      "shadow": true,
+                      "color": "#FFFFFF"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "props": {
+          "scroll": true,
+          "padding": { "left": 16, "right": 16 },
+          "gap": 16
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "imageUrl": "navratri/categories/choli.jpg",
+                  "width": 62,
+                  "height": 62,
+                  "radius": 31,
+                  "fit": "cover",
+                  "imageAlignment": "center",
+                  "borderWidth": 1,
+                  "borderColor": "#E4DED2",
+                  "color": "#E9C9B8"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Choli",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "imageUrl": "navratri/categories/kediyu.jpg",
+                  "width": 62,
+                  "height": 62,
+                  "radius": 31,
+                  "fit": "cover",
+                  "imageAlignment": "topCenter",
+                  "borderWidth": 1,
+                  "borderColor": "#E4DED2",
+                  "color": "#D9D3EA"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Kediyu",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "imageUrl": "navratri/categories/jewellery.jpg",
+                  "width": 62,
+                  "height": 62,
+                  "radius": 31,
+                  "fit": "cover",
+                  "imageAlignment": "center",
+                  "borderWidth": 1,
+                  "borderColor": "#E4DED2",
+                  "color": "#EBDDB0"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Jewellery",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "imageUrl": "navratri/categories/dandiya.jpg",
+                  "width": 62,
+                  "height": 62,
+                  "radius": 31,
+                  "fit": "cover",
+                  "imageAlignment": "center",
+                  "borderWidth": 1,
+                  "borderColor": "#E4DED2",
+                  "color": "#C9D8CF"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Dandiya",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "imageUrl": "navratri/categories/footwear.jpg",
+                  "width": 62,
+                  "height": 62,
+                  "radius": 31,
+                  "fit": "cover",
+                  "imageAlignment": "center",
+                  "borderWidth": 1,
+                  "borderColor": "#E4DED2",
+                  "color": "#E9C9B8"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Footwear",
+                  "fontSize": 12,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 12
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "value": "Chaniya choli for Garba",
+              "fontSize": 17,
+              "bold": true,
+              "color": "#14120F"
+            }
+          },
+          {
+            "type": "grid",
+            "props": {
+              "crossAxisCount": 2,
+              "gap": 12,
+              "childAspectRatio": 0.58
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 210,
+                  "imageUrl": "navratri/products/mirror_work_choli.jpg",
+                  "imageAlignment": "topCenter",
+                  "fit": "cover",
+                  "imageColor": "#E9C9B8",
+                  "brand": "Brand A",
+                  "title": "Mirror work choli",
+                  "price": "₹1999",
+                  "originalPrice": "₹3999",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 210,
+                  "imageUrl": "navratri/products/printed_ghagra.jpg",
+                  "imageAlignment": "topCenter",
+                  "fit": "cover",
+                  "imageColor": "#D9D3EA",
+                  "brand": "Brand B",
+                  "title": "Printed ghagra",
+                  "price": "₹1499",
+                  "originalPrice": "₹2999",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 210,
+                  "imageUrl": "navratri/products/kediyu_set.jpg",
+                  "imageAlignment": "topCenter",
+                  "fit": "cover",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Brand C",
+                  "title": "Kediyu set",
+                  "price": "₹1199",
+                  "originalPrice": "₹2399",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 210,
+                  "imageUrl": "navratri/products/oxidised_necklace.jpg",
+                  "imageAlignment": "center",
+                  "fit": "cover",
+                  "imageColor": "#EBDDB0",
+                  "brand": "Brand D",
+                  "title": "Oxidised necklace",
+                  "price": "₹499",
+                  "originalPrice": "₹999",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "props": {
+          "padding": { "left": 16, "right": 16 },
+          "gap": 12
+        },
+        "children": [
+          {
+            "type": "row",
+            "props": {
+              "mainAxisAlignment": "spaceBetween",
+              "crossAxisAlignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Dandiya ready",
+                  "fontSize": 17,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "See all",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#C8321A"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "props": {
+              "scroll": true,
+              "gap": 12
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 140,
+                  "imageHeight": 124,
+                  "imageUrl": "navratri/products/dandiya_sticks.jpg",
+                  "imageAlignment": "center",
+                  "fit": "cover",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Brand E",
+                  "title": "Dandiya sticks",
+                  "price": "₹299",
+                  "originalPrice": "₹599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 140,
+                  "imageHeight": 124,
+                  "imageUrl": "navratri/products/kolhapuri_sandals.jpg",
+                  "imageAlignment": "center",
+                  "fit": "cover",
+                  "imageColor": "#E9C9B8",
+                  "brand": "Brand F",
+                  "title": "Kolhapuri sandals",
+                  "price": "₹599",
+                  "originalPrice": "₹1199",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "width": 140,
+                  "imageHeight": 124,
+                  "imageUrl": "navratri/products/batwa_bag.jpg",
+                  "imageAlignment": "center",
+                  "fit": "cover",
+                  "imageColor": "#D9D3EA",
+                  "brand": "Brand G",
+                  "title": "Batwa bag",
+                  "price": "₹449",
+                  "originalPrice": "₹899",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

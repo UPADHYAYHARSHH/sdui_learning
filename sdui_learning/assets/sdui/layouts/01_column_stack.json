@@ -1,0 +1,31 @@
+{
+  "id": "layout_demo",
+  "title": "01 · Column stack",
+  "background": "#0F0F12",
+  "root": {
+    "type": "column",
+    "props": { "padding": 20, "gap": 14, "crossAxisAlignment": "stretch" },
+    "children": [
+      {
+        "type": "text",
+        "props": { "value": "01 — Vertical column", "fontSize": 24, "bold": true, "color": "#FFFFFF" }
+      },
+      {
+        "type": "text",
+        "props": { "value": "Simple top-to-bottom stack of text and one image.", "fontSize": 14, "color": "#B0B0B0", "height": 1.4 }
+      },
+      {
+        "type": "image",
+        "props": {
+          "url": "https://images.unsplash.com/photo-1574607383476-f517f260d9b1?w=1000&q=80",
+          "height": 200,
+          "radius": 16
+        }
+      },
+      {
+        "type": "text",
+        "props": { "value": "Footer line under the image", "fontSize": 15, "color": "#E8B84B" }
+      }
+    ]
+  }
+}

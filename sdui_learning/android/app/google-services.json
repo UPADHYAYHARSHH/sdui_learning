@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "296137172782",
+    "project_id": "sdui-learning",
+    "storage_bucket": "sdui-learning.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296137172782:android:b544e46393df39f04dfcbf",
+        "android_client_info": {
+          "package_name": "com.example.sdui_learning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwe0LqpJnBLDHIKl6tnH7XmC4EPebGwrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

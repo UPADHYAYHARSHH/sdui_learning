@@ -1,0 +1,66 @@
+{
+  "id": "layout_demo",
+  "title": "07 · Profile stats",
+  "background": "#111111",
+  "root": {
+    "type": "column",
+    "props": { "padding": 24, "gap": 20, "crossAxisAlignment": "center" },
+    "children": [
+      {
+        "type": "text",
+        "props": { "value": "07 — Profile header + stats", "fontSize": 20, "bold": true, "color": "#FFFFFF", "align": "center" }
+      },
+      {
+        "type": "image",
+        "props": {
+          "url": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&q=80",
+          "height": 96,
+          "width": 96,
+          "radius": 48
+        }
+      },
+      {
+        "type": "text",
+        "props": { "value": "Harsh Upadhyay", "fontSize": 22, "bold": true, "color": "#FFFFFF", "align": "center" }
+      },
+      {
+        "type": "text",
+        "props": { "value": "SDUI learner · Flutter", "fontSize": 14, "color": "#A3A3A3", "align": "center" }
+      },
+      {
+        "type": "row",
+        "props": { "gap": 24, "mainAxisAlignment": "center" },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              { "type": "text", "props": { "value": "24", "bold": true, "fontSize": 20, "color": "#FFFFFF", "align": "center" } },
+              { "type": "text", "props": { "value": "Posts", "fontSize": 12, "color": "#A3A3A3", "align": "center" } }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              { "type": "text", "props": { "value": "1.2k", "bold": true, "fontSize": 20, "color": "#FFFFFF", "align": "center" } },
+              { "type": "text", "props": { "value": "Followers", "fontSize": 12, "color": "#A3A3A3", "align": "center" } }
+            ]
+          },
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "children": [
+              { "type": "text", "props": { "value": "180", "bold": true, "fontSize": 20, "color": "#FFFFFF", "align": "center" } },
+              { "type": "text", "props": { "value": "Following", "fontSize": 12, "color": "#A3A3A3", "align": "center" } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "props": { "label": "Edit profile" }
+      }
+    ]
+  }
+}

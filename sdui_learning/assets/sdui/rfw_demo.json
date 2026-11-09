@@ -1,0 +1,13 @@
+{
+  "id": "rfw_demo",
+  "title": "RFW · Riverpod",
+  "library": "import core.widgets;\nimport core.material;\n\nwidget root = Scaffold(\n  backgroundColor: 0xFF0F0F12,\n  appBar: AppBar(\n    backgroundColor: 0xFF0F0F12,\n    title: Text(text: data.ui.title, textDirection: 'ltr'),\n  ),\n  body: SingleChildScrollView(\n    child: Padding(\n      padding: [20.0, 20.0, 20.0, 20.0],\n      child: Column(\n        crossAxisAlignment: 'stretch',\n        children: [\n          Text(\n            text: data.ui.headline,\n            textDirection: 'ltr',\n            style: {\n              fontSize: 24.0,\n              fontWeight: 'bold',\n              color: 0xFFFFFFFF,\n            },\n          ),\n          SizedBox(height: 12.0),\n          Text(\n            text: data.ui.subtitle,\n            textDirection: 'ltr',\n            style: {\n              fontSize: 14.0,\n              color: 0xFFB0B0B0,\n              height: 1.4,\n            },\n          ),\n          SizedBox(height: 20.0),\n          Container(\n            color: 0xFFC45C26,\n            padding: [16.0, 16.0, 16.0, 16.0],\n            child: Text(\n              text: data.ui.banner,\n              textDirection: 'ltr',\n              style: {\n                fontSize: 16.0,\n                fontWeight: 'bold',\n                color: 0xFFFFFFFF,\n              },\n            ),\n          ),\n          SizedBox(height: 16.0),\n          Text(\n            text: 'Edit screens/rfw_demo in Firestore — library + data update live via RFW.',\n            textDirection: 'ltr',\n            style: {\n              fontSize: 13.0,\n              color: 0xFFE8B84B,\n            },\n          ),\n        ],\n      ),\n    ),\n  ),\n);\n",
+  "data": {
+    "ui": {
+      "title": "RFW Demo",
+      "headline": "Remote Flutter Widgets",
+      "subtitle": "UI comes from the RFW library string (not DynamicLayoutBuilder).",
+      "banner": "PUSHED VIA COMMAND — RFW live update works"
+    }
+  }
+}

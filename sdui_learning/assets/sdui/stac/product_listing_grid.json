@@ -1,0 +1,842 @@
+{
+  "id": "product_listing",
+  "layout": "grid",
+  "screen": {
+    "type": "scaffold",
+    "backgroundColor": "#F6F4F1",
+    "appBar": {
+      "type": "appBar",
+      "backgroundColor": "#F6F4F1",
+      "elevation": 0,
+      "title": {
+        "type": "text",
+        "data": "Product listing",
+        "style": {
+          "fontSize": 18,
+          "fontWeight": "w600",
+          "color": "#1C1917"
+        }
+      }
+    },
+    "body": {
+      "type": "singleChildScrollView",
+      "padding": {
+        "left": 16,
+        "top": 8,
+        "right": 16,
+        "bottom": 24
+      },
+      "child": {
+        "type": "column",
+        "crossAxisAlignment": "stretch",
+        "children": [
+          {
+            "type": "text",
+            "data": "Two-column grid",
+            "style": {
+              "fontSize": 28,
+              "fontWeight": "w700",
+              "color": "#1C1917"
+            }
+          },
+          {
+            "type": "sizedBox",
+            "height": 6
+          },
+          {
+            "type": "text",
+            "data": "Everyday objects. Spacing, color, and cards come from this JSON file.",
+            "style": {
+              "fontSize": 14,
+              "fontWeight": "w400",
+              "color": "#57534E"
+            }
+          },
+          {
+            "type": "sizedBox",
+            "height": 16
+          },
+          {
+            "type": "textField",
+            "maxLines": 1,
+            "style": {
+              "fontSize": 15,
+              "color": "#1C1917"
+            },
+            "decoration": {
+              "hintText": "Search objects",
+              "filled": true,
+              "fillColor": "#FFFFFF",
+              "prefixIcon": {
+                "type": "icon",
+                "icon": "search",
+                "iconType": "material",
+                "size": 20,
+                "color": "#78716C"
+              }
+            },
+            "onSubmitted": {
+              "actionType": "showSnackBar",
+              "behavior": "floating",
+              "content": {
+                "type": "text",
+                "data": "Search is JSON. Filtering stays on the server.",
+                "style": {
+                  "fontSize": 14,
+                  "fontWeight": "w400",
+                  "color": "#1C1917"
+                }
+              }
+            }
+          },
+          {
+            "type": "sizedBox",
+            "height": 16
+          },
+          {
+            "type": "gridView",
+            "crossAxisCount": 2,
+            "mainAxisSpacing": 12,
+            "crossAxisSpacing": 12,
+            "mainAxisExtent": 236,
+            "shrinkWrap": true,
+            "primary": false,
+            "physics": "never",
+            "children": [
+              {
+                "type": "card",
+                "color": "#FFFFFF",
+                "elevation": 1,
+                "clipBehavior": "antiAlias",
+                "margin": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "shape": {
+                  "type": "roundedRectangle",
+                  "borderRadius": 8
+                },
+                "child": {
+                  "type": "padding",
+                  "padding": 8,
+                  "child": {
+                    "type": "column",
+                    "crossAxisAlignment": "stretch",
+                    "children": [
+                      {
+                        "type": "image",
+                        "src": "https://picsum.photos/id/1060/400/300",
+                        "imageType": "network",
+                        "width": 400,
+                        "height": 88,
+                        "fit": "cover",
+                        "semanticLabel": "Ceramic Pour Bowl"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "text",
+                        "data": "20% off",
+                        "style": {
+                          "fontSize": 12,
+                          "fontWeight": "w700",
+                          "color": "#9A3412"
+                        }
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 4
+                      },
+                      {
+                        "type": "text",
+                        "data": "Ceramic Pour Bowl",
+                        "style": {
+                          "fontSize": 14,
+                          "fontWeight": "w600",
+                          "color": "#1C1917"
+                        },
+                        "maxLines": 1,
+                        "overflow": "ellipsis"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 4
+                      },
+                      {
+                        "type": "row",
+                        "crossAxisAlignment": "center",
+                        "children": [
+                          {
+                            "type": "text",
+                            "data": "$48",
+                            "style": {
+                              "fontSize": 14,
+                              "fontWeight": "w700",
+                              "color": "#1C1917"
+                            }
+                          },
+                          {
+                            "type": "sizedBox",
+                            "width": 8
+                          },
+                          {
+                            "type": "text",
+                            "data": "$60",
+                            "style": {
+                              "fontSize": 12,
+                              "fontWeight": "w400",
+                              "color": "#78716C",
+                              "decoration": "lineThrough"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "elevatedButton",
+                        "style": {
+                          "backgroundColor": "#1C1917",
+                          "foregroundColor": "#FFFFFF"
+                        },
+                        "onPressed": {
+                          "actionType": "navigate",
+                          "navigationStyle": "push",
+                          "widgetJson": {
+                            "type": "scaffold",
+                            "backgroundColor": "#F6F4F1",
+                            "appBar": {
+                              "type": "appBar",
+                              "backgroundColor": "#F6F4F1",
+                              "elevation": 0,
+                              "title": {
+                                "type": "text",
+                                "data": "Ceramic Pour Bowl",
+                                "style": {
+                                  "fontSize": 18,
+                                  "fontWeight": "w600",
+                                  "color": "#1C1917"
+                                }
+                              }
+                            },
+                            "body": {
+                              "type": "padding",
+                              "padding": 24,
+                              "child": {
+                                "type": "column",
+                                "crossAxisAlignment": "start",
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "data": "Ceramic Pour Bowl",
+                                    "style": {
+                                      "fontSize": 28,
+                                      "fontWeight": "w700",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 8
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "$48",
+                                    "style": {
+                                      "fontSize": 20,
+                                      "fontWeight": "w600",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 16
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "Speckled stoneware for pouring and serving.",
+                                    "style": {
+                                      "fontSize": 15,
+                                      "fontWeight": "w400",
+                                      "color": "#57534E"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 12
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "This detail page is Stac JSON pushed by a navigate action.",
+                                    "style": {
+                                      "fontSize": 13,
+                                      "fontWeight": "w400",
+                                      "color": "#78716C"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "child": {
+                          "type": "text",
+                          "data": "View",
+                          "style": {
+                            "fontSize": 13,
+                            "fontWeight": "w600",
+                            "color": "#FFFFFF"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "card",
+                "color": "#FFFFFF",
+                "elevation": 1,
+                "clipBehavior": "antiAlias",
+                "margin": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "shape": {
+                  "type": "roundedRectangle",
+                  "borderRadius": 8
+                },
+                "child": {
+                  "type": "padding",
+                  "padding": 8,
+                  "child": {
+                    "type": "column",
+                    "crossAxisAlignment": "stretch",
+                    "children": [
+                      {
+                        "type": "image",
+                        "src": "https://picsum.photos/id/106/400/300",
+                        "imageType": "network",
+                        "width": 400,
+                        "height": 88,
+                        "fit": "cover",
+                        "semanticLabel": "Linen Throw"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "text",
+                        "data": "Linen Throw",
+                        "style": {
+                          "fontSize": 14,
+                          "fontWeight": "w600",
+                          "color": "#1C1917"
+                        },
+                        "maxLines": 1,
+                        "overflow": "ellipsis"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 4
+                      },
+                      {
+                        "type": "row",
+                        "crossAxisAlignment": "center",
+                        "children": [
+                          {
+                            "type": "text",
+                            "data": "$36",
+                            "style": {
+                              "fontSize": 14,
+                              "fontWeight": "w700",
+                              "color": "#1C1917"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "elevatedButton",
+                        "style": {
+                          "backgroundColor": "#1C1917",
+                          "foregroundColor": "#FFFFFF"
+                        },
+                        "onPressed": {
+                          "actionType": "navigate",
+                          "navigationStyle": "push",
+                          "widgetJson": {
+                            "type": "scaffold",
+                            "backgroundColor": "#F6F4F1",
+                            "appBar": {
+                              "type": "appBar",
+                              "backgroundColor": "#F6F4F1",
+                              "elevation": 0,
+                              "title": {
+                                "type": "text",
+                                "data": "Linen Throw",
+                                "style": {
+                                  "fontSize": 18,
+                                  "fontWeight": "w600",
+                                  "color": "#1C1917"
+                                }
+                              }
+                            },
+                            "body": {
+                              "type": "padding",
+                              "padding": 24,
+                              "child": {
+                                "type": "column",
+                                "crossAxisAlignment": "start",
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "data": "Linen Throw",
+                                    "style": {
+                                      "fontSize": 28,
+                                      "fontWeight": "w700",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 8
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "$36",
+                                    "style": {
+                                      "fontSize": 20,
+                                      "fontWeight": "w600",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 16
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "Washed linen in oat.",
+                                    "style": {
+                                      "fontSize": 15,
+                                      "fontWeight": "w400",
+                                      "color": "#57534E"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 12
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "This detail page is Stac JSON pushed by a navigate action.",
+                                    "style": {
+                                      "fontSize": 13,
+                                      "fontWeight": "w400",
+                                      "color": "#78716C"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "child": {
+                          "type": "text",
+                          "data": "View",
+                          "style": {
+                            "fontSize": 13,
+                            "fontWeight": "w600",
+                            "color": "#FFFFFF"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "card",
+                "color": "#FFFFFF",
+                "elevation": 1,
+                "clipBehavior": "antiAlias",
+                "margin": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "shape": {
+                  "type": "roundedRectangle",
+                  "borderRadius": 8
+                },
+                "child": {
+                  "type": "padding",
+                  "padding": 8,
+                  "child": {
+                    "type": "column",
+                    "crossAxisAlignment": "stretch",
+                    "children": [
+                      {
+                        "type": "image",
+                        "src": "https://picsum.photos/id/292/400/300",
+                        "imageType": "network",
+                        "width": 400,
+                        "height": 88,
+                        "fit": "cover",
+                        "semanticLabel": "Oak Serving Tray"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "text",
+                        "data": "15% off",
+                        "style": {
+                          "fontSize": 12,
+                          "fontWeight": "w700",
+                          "color": "#9A3412"
+                        }
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 4
+                      },
+                      {
+                        "type": "text",
+                        "data": "Oak Serving Tray",
+                        "style": {
+                          "fontSize": 14,
+                          "fontWeight": "w600",
+                          "color": "#1C1917"
+                        },
+                        "maxLines": 1,
+                        "overflow": "ellipsis"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 4
+                      },
+                      {
+                        "type": "row",
+                        "crossAxisAlignment": "center",
+                        "children": [
+                          {
+                            "type": "text",
+                            "data": "$64",
+                            "style": {
+                              "fontSize": 14,
+                              "fontWeight": "w700",
+                              "color": "#1C1917"
+                            }
+                          },
+                          {
+                            "type": "sizedBox",
+                            "width": 8
+                          },
+                          {
+                            "type": "text",
+                            "data": "$75",
+                            "style": {
+                              "fontSize": 12,
+                              "fontWeight": "w400",
+                              "color": "#78716C",
+                              "decoration": "lineThrough"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "elevatedButton",
+                        "style": {
+                          "backgroundColor": "#1C1917",
+                          "foregroundColor": "#FFFFFF"
+                        },
+                        "onPressed": {
+                          "actionType": "navigate",
+                          "navigationStyle": "push",
+                          "widgetJson": {
+                            "type": "scaffold",
+                            "backgroundColor": "#F6F4F1",
+                            "appBar": {
+                              "type": "appBar",
+                              "backgroundColor": "#F6F4F1",
+                              "elevation": 0,
+                              "title": {
+                                "type": "text",
+                                "data": "Oak Serving Tray",
+                                "style": {
+                                  "fontSize": 18,
+                                  "fontWeight": "w600",
+                                  "color": "#1C1917"
+                                }
+                              }
+                            },
+                            "body": {
+                              "type": "padding",
+                              "padding": 24,
+                              "child": {
+                                "type": "column",
+                                "crossAxisAlignment": "start",
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "data": "Oak Serving Tray",
+                                    "style": {
+                                      "fontSize": 28,
+                                      "fontWeight": "w700",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 8
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "$64",
+                                    "style": {
+                                      "fontSize": 20,
+                                      "fontWeight": "w600",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 16
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "Solid oak with rounded corners.",
+                                    "style": {
+                                      "fontSize": 15,
+                                      "fontWeight": "w400",
+                                      "color": "#57534E"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 12
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "This detail page is Stac JSON pushed by a navigate action.",
+                                    "style": {
+                                      "fontSize": 13,
+                                      "fontWeight": "w400",
+                                      "color": "#78716C"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "child": {
+                          "type": "text",
+                          "data": "View",
+                          "style": {
+                            "fontSize": 13,
+                            "fontWeight": "w600",
+                            "color": "#FFFFFF"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "card",
+                "color": "#FFFFFF",
+                "elevation": 1,
+                "clipBehavior": "antiAlias",
+                "margin": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "shape": {
+                  "type": "roundedRectangle",
+                  "borderRadius": 8
+                },
+                "child": {
+                  "type": "padding",
+                  "padding": 8,
+                  "child": {
+                    "type": "column",
+                    "crossAxisAlignment": "stretch",
+                    "children": [
+                      {
+                        "type": "image",
+                        "src": "https://picsum.photos/id/30/400/300",
+                        "imageType": "network",
+                        "width": 400,
+                        "height": 88,
+                        "fit": "cover",
+                        "semanticLabel": "Stoneware Mug"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "text",
+                        "data": "Stoneware Mug",
+                        "style": {
+                          "fontSize": 14,
+                          "fontWeight": "w600",
+                          "color": "#1C1917"
+                        },
+                        "maxLines": 1,
+                        "overflow": "ellipsis"
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 4
+                      },
+                      {
+                        "type": "row",
+                        "crossAxisAlignment": "center",
+                        "children": [
+                          {
+                            "type": "text",
+                            "data": "$22",
+                            "style": {
+                              "fontSize": 14,
+                              "fontWeight": "w700",
+                              "color": "#1C1917"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "sizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "elevatedButton",
+                        "style": {
+                          "backgroundColor": "#1C1917",
+                          "foregroundColor": "#FFFFFF"
+                        },
+                        "onPressed": {
+                          "actionType": "navigate",
+                          "navigationStyle": "push",
+                          "widgetJson": {
+                            "type": "scaffold",
+                            "backgroundColor": "#F6F4F1",
+                            "appBar": {
+                              "type": "appBar",
+                              "backgroundColor": "#F6F4F1",
+                              "elevation": 0,
+                              "title": {
+                                "type": "text",
+                                "data": "Stoneware Mug",
+                                "style": {
+                                  "fontSize": 18,
+                                  "fontWeight": "w600",
+                                  "color": "#1C1917"
+                                }
+                              }
+                            },
+                            "body": {
+                              "type": "padding",
+                              "padding": 24,
+                              "child": {
+                                "type": "column",
+                                "crossAxisAlignment": "start",
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "data": "Stoneware Mug",
+                                    "style": {
+                                      "fontSize": 28,
+                                      "fontWeight": "w700",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 8
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "$22",
+                                    "style": {
+                                      "fontSize": 20,
+                                      "fontWeight": "w600",
+                                      "color": "#1C1917"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 16
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "A 300 ml mug with a matte glaze.",
+                                    "style": {
+                                      "fontSize": 15,
+                                      "fontWeight": "w400",
+                                      "color": "#57534E"
+                                    }
+                                  },
+                                  {
+                                    "type": "sizedBox",
+                                    "height": 12
+                                  },
+                                  {
+                                    "type": "text",
+                                    "data": "This detail page is Stac JSON pushed by a navigate action.",
+                                    "style": {
+                                      "fontSize": 13,
+                                      "fontWeight": "w400",
+                                      "color": "#78716C"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "child": {
+                          "type": "text",
+                          "data": "View",
+                          "style": {
+                            "fontSize": 13,
+                            "fontWeight": "w600",
+                            "color": "#FFFFFF"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

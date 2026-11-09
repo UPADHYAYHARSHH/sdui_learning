@@ -1,0 +1,76 @@
+{
+  "id": "layout_demo",
+  "title": "Home · Grid only",
+  "background": "#0F0F12",
+  "root": {
+    "type": "column",
+    "props": {
+      "padding": 16,
+      "gap": 12,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "value": "Home — grid only",
+          "fontSize": 22,
+          "bold": true,
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Later replace this Firestore doc with layout 5 (shop) — no code change.",
+          "fontSize": 13,
+          "color": "#B0B0B0",
+          "height": 1.4
+        }
+      },
+      {
+        "type": "grid",
+        "props": {
+          "crossAxisCount": { "0": 2, "600": 3, "900": 4 },
+          "gap": 12,
+          "childAspectRatio": 1.05,
+          "responsive": true
+        },
+        "children": [
+          {
+            "type": "image",
+            "props": {
+              "url": "https://picsum.photos/seed/home1/400/400",
+              "height": 160,
+              "radius": 14
+            }
+          },
+          {
+            "type": "image",
+            "props": {
+              "url": "https://picsum.photos/seed/home2/400/400",
+              "height": 160,
+              "radius": 14
+            }
+          },
+          {
+            "type": "image",
+            "props": {
+              "url": "https://picsum.photos/seed/home3/400/400",
+              "height": 160,
+              "radius": 14
+            }
+          },
+          {
+            "type": "image",
+            "props": {
+              "url": "https://picsum.photos/seed/home4/400/400",
+              "height": 160,
+              "radius": 14
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

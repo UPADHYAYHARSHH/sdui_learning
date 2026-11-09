@@ -1,0 +1,64 @@
+{
+  "id": "layout_demo",
+  "title": "06 · Nested mixed",
+  "background": "#0B1220",
+  "root": {
+    "type": "column",
+    "props": { "padding": 16, "gap": 16, "crossAxisAlignment": "stretch" },
+    "children": [
+      {
+        "type": "text",
+        "props": { "value": "06 — Nested column → row → grid", "fontSize": 20, "bold": true, "color": "#FFFFFF" }
+      },
+      {
+        "type": "row",
+        "props": { "gap": 12, "crossAxisAlignment": "center" },
+        "children": [
+          {
+            "type": "text",
+            "props": { "value": "Left", "fontSize": 16, "bold": true, "color": "#7DD3FC" }
+          },
+          {
+            "type": "text",
+            "props": { "value": "Right label", "fontSize": 14, "color": "#94A3B8" }
+          }
+        ]
+      },
+      {
+        "type": "grid",
+        "props": { "crossAxisCount": 3, "gap": 8, "childAspectRatio": 0.9 },
+        "children": [
+          {
+            "type": "container",
+            "props": { "color": "#1E293B", "padding": 10, "radius": 12 },
+            "children": [
+              { "type": "text", "props": { "value": "A", "align": "center", "bold": true, "color": "#FFFFFF", "fontSize": 20 } }
+            ]
+          },
+          {
+            "type": "container",
+            "props": { "color": "#334155", "padding": 10, "radius": 12 },
+            "children": [
+              { "type": "text", "props": { "value": "B", "align": "center", "bold": true, "color": "#FFFFFF", "fontSize": 20 } }
+            ]
+          },
+          {
+            "type": "container",
+            "props": { "color": "#475569", "padding": 10, "radius": 12 },
+            "children": [
+              { "type": "text", "props": { "value": "C", "align": "center", "bold": true, "color": "#FFFFFF", "fontSize": 20 } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "props": {
+          "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1000&q=80",
+          "height": 140,
+          "radius": 14
+        }
+      }
+    ]
+  }
+}

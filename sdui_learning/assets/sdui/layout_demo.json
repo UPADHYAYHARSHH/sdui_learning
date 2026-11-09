@@ -1,0 +1,118 @@
+{
+  "id": "layout_demo",
+  "title": "Dynamic Layout",
+  "background": "#0F0F12",
+  "root": {
+    "type": "column",
+    "props": {
+      "padding": 20,
+      "gap": 16,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "value": "Layout demo (column + row)",
+          "fontSize": 24,
+          "bold": true,
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Edit screens/layout_demo in Firestore. Swap root/children to type grid to change layout live — no app model change.",
+          "fontSize": 14,
+          "color": "#B0B0B0",
+          "height": 1.4
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "gap": 12,
+          "crossAxisAlignment": "center"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "value": "Title",
+              "fontSize": 18,
+              "bold": true,
+              "color": "#E8B84B"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "value": "Subtitle",
+              "fontSize": 16,
+              "color": "#FFFFFF"
+            }
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "props": {
+          "url": "https://images.unsplash.com/photo-1574607383476-f517f260d9b1?w=1200&q=80",
+          "height": 180,
+          "radius": 16
+        }
+      },
+      {
+        "type": "row",
+        "props": {
+          "gap": 10,
+          "scroll": true
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": {
+              "color": "#C45C26",
+              "padding": 12,
+              "radius": 12
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": { "value": "Card A", "color": "#FFFFFF", "bold": true }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "color": "#7B1E3A",
+              "padding": 12,
+              "radius": 12
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": { "value": "Card B", "color": "#FFFFFF", "bold": true }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": {
+              "color": "#2D6A4F",
+              "padding": 12,
+              "radius": 12
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": { "value": "Card C", "color": "#FFFFFF", "bold": true }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "id": "category_listing",
+  "title": "Women · Kurtas",
+  "background": "#F7F5F0",
+  "showAppBar": false,
+  "theme": {
+    "primary": "#C8321A",
+    "secondary": "#14120F",
+    "background": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "onPrimary": "#FFFFFF",
+    "onBackground": "#14120F"
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "gap": 10,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "container",
+        "props": {
+          "color": "#FFFFFF",
+          "padding": { "left": 16, "right": 16, "top": 14, "bottom": 12 }
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 10 },
+            "children": [
+              {
+                "type": "row",
+                "props": { "mainAxisAlignment": "spaceBetween", "crossAxisAlignment": "center" },
+                "children": [
+                  {
+                    "type": "row",
+                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "‹",
+                          "fontSize": 28,
+                          "bold": false,
+                          "color": "#14120F",
+                          "action": "navigate_back"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Women · Kurtas",
+                          "fontSize": 16,
+                          "bold": true,
+                          "color": "#14120F"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "icon",
+                    "props": {
+                      "name": "search",
+                      "size": 20,
+                      "color": "#14120F",
+                      "action": "toggle_search"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "chips",
+                "props": {
+                  "gap": 8,
+                  "items": [
+                    { "label": "Sort", "selected": true },
+                    { "label": "Filter" },
+                    { "label": "Size" },
+                    { "label": "Price" },
+                    { "label": "Brand" }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "padding",
+        "props": { "padding": { "left": 16, "right": 16 } },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "value": "1,248 products · Delivery to 380015",
+              "fontSize": 12,
+              "fontWeight": "w500",
+              "color": "#5A554C"
+            }
+          }
+        ]
+      },
+      {
+        "type": "padding",
+        "props": { "padding": { "left": 16, "right": 16 } },
+        "children": [
+          {
+            "type": "grid",
+            "props": {
+              "crossAxisCount": 2,
+              "gap": 10,
+              "childAspectRatio": 0.58
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/cotton_straight_kurta.jpg",
+                  "imageColor": "#E9C9B8",
+                  "brand": "Brand A",
+                  "title": "Cotton straight kurta",
+                  "price": "₹799",
+                  "originalPrice": "₹1599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/embroidered_kurta_set.jpg",
+                  "imageColor": "#D9D3EA",
+                  "brand": "Brand B",
+                  "title": "Embroidered kurta set",
+                  "price": "₹1199",
+                  "originalPrice": "₹2399",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/block_print_kurta.jpg",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Brand C",
+                  "title": "Block print kurta",
+                  "price": "₹649",
+                  "originalPrice": "₹1299",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/anarkali_kurta.jpg",
+                  "imageColor": "#EBDDB0",
+                  "brand": "Brand D",
+                  "title": "Anarkali kurta",
+                  "price": "₹1499",
+                  "originalPrice": "₹2999",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "margin": { "left": 16, "right": 16 },
+          "radius": 14,
+          "color": "#C8321A",
+          "padding": 16
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 4, "crossAxisAlignment": "start" },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Extra 10% off on prepaid orders",
+                  "fontSize": 15,
+                  "bold": true,
+                  "color": "#FFFFFF"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Applied at checkout",
+                  "fontSize": 12,
+                  "fontWeight": "w500",
+                  "color": "#FFFFFF"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "padding",
+        "props": { "padding": { "left": 16, "right": 16 } },
+        "children": [
+          {
+            "type": "grid",
+            "props": {
+              "crossAxisCount": 2,
+              "gap": 10,
+              "childAspectRatio": 0.58
+            },
+            "children": [
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/festive_kurta.jpg",
+                  "imageColor": "#C9D8CF",
+                  "brand": "Brand E",
+                  "title": "Festive kurta",
+                  "price": "₹999",
+                  "originalPrice": "₹1999",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/linen_kurta.jpg",
+                  "imageColor": "#E9C9B8",
+                  "brand": "Brand F",
+                  "title": "Linen kurta",
+                  "price": "₹849",
+                  "originalPrice": "₹1699",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/chikankari_kurta.jpg",
+                  "imageColor": "#D9D3EA",
+                  "brand": "Brand G",
+                  "title": "Chikankari kurta",
+                  "price": "₹1299",
+                  "originalPrice": "₹2599",
+                  "discount": "50% off"
+                }
+              },
+              {
+                "type": "product_card",
+                "props": {
+                  "imageHeight": 190,
+                  "imageUrl": "kurtas/printed_kurta.jpg",
+                  "imageColor": "#EBDDB0",
+                  "brand": "Brand H",
+                  "title": "Printed A-line kurta",
+                  "price": "₹899",
+                  "originalPrice": "₹1799",
+                  "discount": "50% off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "bottom_nav",
+        "props": {
+          "activeIndex": 1,
+          "items": ["Home", "Categories", "Bag", "Profile"]
+        }
+      }
+    ]
+  }
+}

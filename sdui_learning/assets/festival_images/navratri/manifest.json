@@ -1,0 +1,23 @@
+{
+  "products": [
+    "batwa_bag.jpg",
+    "dandiya_sticks.jpg",
+    "kediyu_set.jpg",
+    "kolhapuri_sandals.jpg",
+    "mirror_work_choli.jpg",
+    "oxidised_necklace.jpg",
+    "printed_ghagra.jpg"
+  ],
+  "categories": [
+    "choli.jpg",
+    "dandiya.jpg",
+    "footwear.jpg",
+    "jewellery.jpg",
+    "kediyu.jpg"
+  ],
+  "banners": [
+    "banner_her_garba_look.jpg",
+    "banner_his_kediyu_look.jpg"
+  ],
+  "topbar": "topbar.gif"
+}

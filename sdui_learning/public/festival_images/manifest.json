@@ -1,0 +1,94 @@
+{
+  "navratri": {
+    "products": [
+      "batwa_bag.jpg",
+      "dandiya_sticks.jpg",
+      "kediyu_set.jpg",
+      "kolhapuri_sandals.jpg",
+      "mirror_work_choli.jpg",
+      "oxidised_necklace.jpg",
+      "printed_ghagra.jpg"
+    ],
+    "categories": [
+      "choli.jpg",
+      "dandiya.jpg",
+      "footwear.jpg",
+      "jewellery.jpg",
+      "kediyu.jpg"
+    ],
+    "banners": [
+      "banner_her_garba_look.jpg",
+      "banner_his_kediyu_look.jpg"
+    ],
+    "topbar": "topbar.gif"
+  },
+  "diwali": {
+    "products": [
+      "brass_diya_set.jpg",
+      "embroidered_kurta.jpg",
+      "fairy_light_set.jpg",
+      "gold_tone_watch.jpg",
+      "nehru_jacket.jpg",
+      "potli_bag.jpg",
+      "silk_festive_kurta.jpg"
+    ],
+    "categories": [
+      "diyas.jpg",
+      "gift_sets.jpg",
+      "jewellery.jpg",
+      "kids.jpg",
+      "kurtas.jpg",
+      "lights.jpg",
+      "menswear.jpg",
+      "sarees.jpg"
+    ],
+    "banners": [
+      "hero.jpg",
+      "promo_decor.jpg",
+      "promo_gifts.jpg"
+    ],
+    "topbar": "topbar.gif"
+  },
+  "uttarayan": {
+    "products": [
+      "cotton_manja_reel.jpg",
+      "patang_kite_pack.jpg",
+      "starter_combo.jpg",
+      "terrace_party_combo.jpg",
+      "uv_sunglasses.jpg"
+    ],
+    "categories": [
+      "caps.jpg",
+      "jackets.jpg",
+      "kites.jpg",
+      "manja.jpg",
+      "shades.jpg",
+      "snacks.jpg"
+    ],
+    "banners": [],
+    "topbar": "topbar.gif"
+  },
+  "holi": {
+    "products": [
+      "bucket_cap.jpg",
+      "herbal_colour_set.jpg",
+      "holi_kurta_set.jpg",
+      "sunscreen_kit.jpg",
+      "water_pichkari.jpg",
+      "white_cotton_tee.jpg"
+    ],
+    "categories": [
+      "kids.jpg",
+      "looks.jpg",
+      "party.jpg",
+      "safe_play.jpg",
+      "skin_care.jpg"
+    ],
+    "banners": [
+      "mosaic_colour_up.jpg",
+      "mosaic_herbal_colours.jpg",
+      "mosaic_white_tees.jpg"
+    ],
+    "topbar": "topbar.gif"
+  }
+}

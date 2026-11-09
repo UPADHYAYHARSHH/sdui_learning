@@ -1,0 +1,27 @@
+{
+  "products": [
+    "brass_diya_set.jpg",
+    "embroidered_kurta.jpg",
+    "fairy_light_set.jpg",
+    "gold_tone_watch.jpg",
+    "nehru_jacket.jpg",
+    "potli_bag.jpg",
+    "silk_festive_kurta.jpg"
+  ],
+  "categories": [
+    "diyas.jpg",
+    "gift_sets.jpg",
+    "jewellery.jpg",
+    "kids.jpg",
+    "kurtas.jpg",
+    "lights.jpg",
+    "menswear.jpg",
+    "sarees.jpg"
+  ],
+  "banners": [
+    "hero.jpg",
+    "promo_decor.jpg",
+    "promo_gifts.jpg"
+  ],
+  "topbar": "topbar.gif"
+}

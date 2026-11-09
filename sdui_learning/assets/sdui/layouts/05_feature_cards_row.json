@@ -1,0 +1,290 @@
+{
+  "id": "layout_demo",
+  "title": "05 · Shop home",
+  "background": "#0F0F12",
+  "root": {
+    "type": "column",
+    "props": {
+      "padding": 16,
+      "gap": 18,
+      "crossAxisAlignment": "stretch"
+    },
+    "children": [
+      {
+        "type": "row",
+        "props": {
+          "gap": 12,
+          "crossAxisAlignment": "center"
+        },
+        "children": [
+          {
+            "type": "expanded",
+            "children": [
+              {
+                "type": "search_bar",
+                "props": {
+                  "hint": "Search products, brands…",
+                  "color": "#1E1E24",
+                  "radius": 14,
+                  "height": 48
+                }
+              }
+            ]
+          },
+          {
+            "type": "icon",
+            "props": {
+              "name": "notifications",
+              "size": 24,
+              "color": "#FFFFFF",
+              "background": "#1E1E24",
+              "box": 48,
+              "radius": 14
+            }
+          }
+        ]
+      },
+      {
+        "type": "chips",
+        "props": {
+          "gap": 8,
+          "items": [
+            { "label": "All", "selected": true },
+            { "label": "Electronics" },
+            { "label": "Fashion" },
+            { "label": "Home" },
+            { "label": "Beauty" },
+            { "label": "Sports" }
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Highlights",
+          "fontSize": 16,
+          "bold": true,
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "type": "carousel",
+        "props": {
+          "height": 150,
+          "gap": 12,
+          "responsive": true
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": { "color": "#C45C26", "radius": 16, "padding": 16 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8, "mainAxisAlignment": "end" },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": { "value": "Carousel 1", "bold": true, "fontSize": 20, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "Festive deals up to 40% off", "fontSize": 13, "color": "#FFE8D6" }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "props": {
+              "url": "https://picsum.photos/seed/carousel2/800/400",
+              "height": 150,
+              "radius": 16
+            }
+          },
+          {
+            "type": "container",
+            "props": { "color": "#7B1E3A", "radius": 16, "padding": 16 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8 },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": { "value": "Carousel 3", "bold": true, "fontSize": 20, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "New arrivals this week", "fontSize": 13, "color": "#F5D0D8" }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "props": {
+              "url": "https://picsum.photos/seed/carousel4/800/400",
+              "height": 150,
+              "radius": 16
+            }
+          },
+          {
+            "type": "container",
+            "props": { "color": "#0EA5E9", "radius": 16, "padding": 16 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8 },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": { "value": "Carousel 5", "bold": true, "fontSize": 20, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "Free shipping today", "fontSize": 13, "color": "#E0F2FE" }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "props": {
+          "value": "Products",
+          "fontSize": 16,
+          "bold": true,
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "type": "grid",
+        "props": {
+          "crossAxisCount": { "0": 2, "600": 3, "900": 4 },
+          "gap": 12,
+          "childAspectRatio": 1.05,
+          "responsive": true
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": { "color": "#1E1E24", "radius": 14, "padding": 10 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8, "crossAxisAlignment": "stretch" },
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "url": "https://picsum.photos/seed/prod1/400/400",
+                      "height": 110,
+                      "radius": 10
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "Wireless buds", "bold": true, "fontSize": 14, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "₹1,999", "fontSize": 13, "color": "#E8B84B" }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": { "color": "#1E1E24", "radius": 14, "padding": 10 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8, "crossAxisAlignment": "stretch" },
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "url": "https://picsum.photos/seed/prod2/400/400",
+                      "height": 110,
+                      "radius": 10
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "Smart watch", "bold": true, "fontSize": 14, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "₹3,499", "fontSize": 13, "color": "#E8B84B" }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": { "color": "#1E1E24", "radius": 14, "padding": 10 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8, "crossAxisAlignment": "stretch" },
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "url": "https://picsum.photos/seed/prod3/400/400",
+                      "height": 110,
+                      "radius": 10
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "Canvas tote", "bold": true, "fontSize": 14, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "₹799", "fontSize": 13, "color": "#E8B84B" }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "props": { "color": "#1E1E24", "radius": 14, "padding": 10 },
+            "children": [
+              {
+                "type": "column",
+                "props": { "gap": 8, "crossAxisAlignment": "stretch" },
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "url": "https://picsum.photos/seed/prod4/400/400",
+                      "height": 110,
+                      "radius": 10
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "Desk lamp", "bold": true, "fontSize": 14, "color": "#FFFFFF" }
+                  },
+                  {
+                    "type": "text",
+                    "props": { "value": "₹1,249", "fontSize": 13, "color": "#E8B84B" }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

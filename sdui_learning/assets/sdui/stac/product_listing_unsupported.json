@@ -1,0 +1,67 @@
+{
+  "id": "product_listing",
+  "layout": "unsupported",
+  "screen": {
+    "type": "scaffold",
+    "backgroundColor": "#F6F4F1",
+    "appBar": {
+      "type": "appBar",
+      "backgroundColor": "#F6F4F1",
+      "elevation": 0,
+      "title": {
+        "type": "text",
+        "data": "Product listing",
+        "style": {
+          "fontSize": 18,
+          "fontWeight": "w600",
+          "color": "#1C1917"
+        }
+      }
+    },
+    "body": {
+      "type": "singleChildScrollView",
+      "padding": {
+        "left": 16,
+        "top": 8,
+        "right": 16,
+        "bottom": 24
+      },
+      "child": {
+        "type": "column",
+        "crossAxisAlignment": "stretch",
+        "children": [
+          {
+            "type": "text",
+            "data": "Two-column grid",
+            "style": {
+              "fontSize": 28,
+              "fontWeight": "w700",
+              "color": "#1C1917"
+            }
+          },
+          {
+            "type": "sizedBox",
+            "height": 12
+          },
+          {
+            "type": "webview",
+            "url": "https://example.com"
+          },
+          {
+            "type": "sizedBox",
+            "height": 12
+          },
+          {
+            "type": "text",
+            "data": "The widget above is not part of Stac 1.5.0.",
+            "style": {
+              "fontSize": 14,
+              "fontWeight": "w400",
+              "color": "#57534E"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
