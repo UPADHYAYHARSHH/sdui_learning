@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../data/repositories/layout_repository.dart';
+import 'checkout_page.dart';
+import 'product_detail_sheet.dart';
 
 /// Product model for the Category Listing page.
 class KurtaProduct {
@@ -148,18 +150,26 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   int? _maxPrice;
   bool _searchOpen = false;
   final TextEditingController _searchController = TextEditingController();
-  final Set<String> _bagItems = {};
-  bool _promoApplied = false;
   int _activeNavIndex = 1; // 1 = Categories
+
+  bool get _promoApplied => ShoppingBagStore.instance.promoApplied;
+
+  String _storeIdFor(KurtaProduct product) => 'kurta_${product.id}';
+
+  void _onBagStoreChanged() {
+    if (mounted) setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
     _currentSort = widget.initialSort;
+    ShoppingBagStore.instance.addListener(_onBagStoreChanged);
   }
 
   @override
   void dispose() {
+    ShoppingBagStore.instance.removeListener(_onBagStoreChanged);
     _searchController.dispose();
     super.dispose();
   }
@@ -436,310 +446,62 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   }
 
   void _showProductDetail(KurtaProduct product) {
-    String selectedSize = product.sizes.first;
-
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    final storeId = _storeIdFor(product);
+    final inBag = ShoppingBagStore.instance.containsId(storeId);
+    showProductDetailCard(
+      context,
+      ProductDetailData(
+        title: product.title,
+        brand: product.brand,
+        priceText: '₹${product.price}',
+        originalPriceText: '₹${product.originalPrice}',
+        discountText: product.discount,
+        imageUrl: product.imagePath,
+        imageColor: product.placeholderColor,
+        sizes: product.sizes,
       ),
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            final inBag = _bagItems.contains(product.id);
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD8D2C6),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            product.imagePath,
-                            width: 100,
-                            height: 120,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.brand,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 13,
-                                  color: const Color(0xFF5A554C),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                product.title,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14120F),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  Text(
-                                    '₹${product.price}',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: const Color(0xFF14120F),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    '₹${product.originalPrice}',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 13,
-                                      color: const Color(0xFF5A554C),
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    product.discount,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w800,
-                                      color: const Color(0xFF1B7A3A),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Select Size',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        for (final s in product.sizes)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: InkWell(
-                              onTap: () {
-                                setSheetState(() => selectedSize = s);
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                width: 44,
-                                height: 44,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: selectedSize == s
-                                      ? const Color(0xFF14120F)
-                                      : Colors.white,
-                                  border: Border.all(
-                                    color: selectedSize == s
-                                        ? const Color(0xFF14120F)
-                                        : const Color(0xFFD8D2C6),
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  s,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontWeight: FontWeight.w700,
-                                    color: selectedSize == s
-                                        ? Colors.white
-                                        : const Color(0xFF14120F),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: inBag
-                              ? const Color(0xFF1B7A3A)
-                              : const Color(0xFFC8321A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            if (inBag) {
-                              _bagItems.remove(product.id);
-                            } else {
-                              _bagItems.add(product.id);
-                            }
-                          });
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                inBag
-                                    ? '${product.title} removed from Bag'
-                                    : 'Added ${product.title} (Size $selectedSize) to Bag!',
-                              ),
-                              duration: const Duration(seconds: 2),
-                              backgroundColor: inBag
-                                  ? const Color(0xFF5A554C)
-                                  : const Color(0xFF1B7A3A),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          inBag ? 'Remove from Bag' : 'Add to Bag',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+      actionLabel: inBag ? 'Remove from Bag' : 'Add to Bag',
+      actionColor: inBag ? const Color(0xFF1B7A3A) : const Color(0xFFC8321A),
+      onActionPressed: (selectedSize) {
+        final chosenSize = selectedSize ?? product.sizes.first;
+        if (inBag) {
+          ShoppingBagStore.instance.removeItem(storeId);
+        } else {
+          ShoppingBagStore.instance.upsertItem(
+            CheckoutItem(
+              id: storeId,
+              title: product.title,
+              brand: product.brand,
+              price: product.price,
+              originalPrice: product.originalPrice,
+              discount: product.discount,
+              imageUrl: product.imagePath,
+              imageColor: product.placeholderColor,
+              size: chosenSize,
+            ),
+          );
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              inBag
+                  ? '${product.title} removed from Bag'
+                  : 'Added ${product.title} (Size $chosenSize) to Bag!',
+            ),
+            duration: const Duration(seconds: 2),
+            backgroundColor:
+                inBag ? const Color(0xFF5A554C) : const Color(0xFF1B7A3A),
+          ),
         );
       },
     );
   }
 
-  void _showBagSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  void _openCheckout() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CheckoutPage(),
       ),
-      builder: (ctx) {
-        final items = _allProducts.where((p) => _bagItems.contains(p.id)).toList();
-        final total = items.fold<int>(0, (sum, p) => sum + p.price);
-
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Shopping Bag (${items.length})',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    if (items.isNotEmpty)
-                      TextButton(
-                        onPressed: () {
-                          setState(() => _bagItems.clear());
-                          Navigator.pop(ctx);
-                        },
-                        child: const Text('Clear'),
-                      ),
-                  ],
-                ),
-                const Divider(),
-                if (items.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 32),
-                    child: Center(
-                      child: Text(
-                        'Your bag is empty',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 15,
-                          color: const Color(0xFF5A554C),
-                        ),
-                      ),
-                    ),
-                  )
-                else ...[
-                  for (final item in items)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${item.brand} · ${item.title}',
-                              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Text(
-                            '₹${item.price}',
-                            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800),
-                          ),
-                        ],
-                      ),
-                    ),
-                  const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Payable:',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      Text(
-                        '₹$total',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFFC8321A),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -753,7 +515,9 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F5F0),
+      bottomNavigationBar: _buildBottomNavBar(),
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             // 1. Top Header & Chips Bar (Exact replica of Listing.dc.html)
@@ -916,11 +680,12 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: InkWell(
                         onTap: () {
-                          setState(() => _promoApplied = !_promoApplied);
+                          final applied = !_promoApplied;
+                          ShoppingBagStore.instance.setPromoApplied(applied);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                _promoApplied
+                                applied
                                     ? 'Coupon PREPAID10 applied! Extra 10% off at checkout'
                                     : 'Prepaid offer coupon removed',
                               ),
@@ -983,43 +748,52 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
 
-            // 3. Bottom Navigation Bar (Exact replica of Listing.dc.html)
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: SafeArea(
-                top: false,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildNavItem('Home', 0, onTap: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    }),
-                    _buildNavItem('Categories', 1, onTap: () {
-                      setState(() {
-                        _activeNavIndex = 1;
-                        _selectedSize = null;
-                        _selectedBrand = null;
-                        _maxPrice = null;
-                        _currentSort = 'Recommended';
-                      });
-                    }),
-                    _buildNavItem('Bag', 2, count: _bagItems.length, onTap: _showBagSheet),
-                    _buildNavItem('Profile', 3, onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Delivery address: Satellite, Ahmedabad 380015'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
+  Widget _buildBottomNavBar() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Color(0xFFE5DFD3))),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem('Home', 0, onTap: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            }),
+            _buildNavItem('Categories', 1, onTap: () {
+              setState(() {
+                _activeNavIndex = 1;
+                _selectedSize = null;
+                _selectedBrand = null;
+                _maxPrice = null;
+                _currentSort = 'Recommended';
+              });
+            }),
+            _buildNavItem(
+              'Bag',
+              2,
+              count: ShoppingBagStore.instance.totalQuantity,
+              onTap: _openCheckout,
             ),
+            _buildNavItem('Profile', 3, onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Delivery address: Satellite, Ahmedabad 380015'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -1077,96 +851,102 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   }
 
   Widget _buildProductCard(KurtaProduct product) {
-    return InkWell(
-      onTap: () => _showProductDetail(product),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showProductDetail(product),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: const Color(0xFFEBE6DC),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Actual high-resolution image instead of colored mockup box!
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Container(
-                height: 190,
-                width: double.infinity,
-                color: product.placeholderColor,
-                child: Image.asset(
-                  product.imagePath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: product.placeholderColor,
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.image, color: Colors.white70, size: 40),
-                    );
-                  },
-                ),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFFEBE6DC),
+                width: 1,
               ),
             ),
-            const SizedBox(height: 6),
-            Text(
-              product.brand,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 12,
-                color: const Color(0xFF5A554C),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              product.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF14120F),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '₹${product.price}',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14120F),
+                // Actual high-resolution image instead of colored mockup box!
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    height: 190,
+                    width: double.infinity,
+                    color: product.placeholderColor,
+                    child: Image.asset(
+                      product.imagePath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: product.placeholderColor,
+                          alignment: Alignment.center,
+                          child: const Icon(Icons.image, color: Colors.white70, size: 40),
+                        );
+                      },
+                    ),
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(height: 6),
                 Text(
-                  '₹${product.originalPrice}',
+                  product.brand,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: const Color(0xFF5A554C),
-                    decoration: TextDecoration.lineThrough,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(height: 2),
                 Text(
-                  product.discount,
+                  product.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1B7A3A),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF14120F),
                   ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      '₹${product.price}',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF14120F),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '₹${product.originalPrice}',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: const Color(0xFF5A554C),
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      product.discount,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF1B7A3A),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

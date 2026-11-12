@@ -419,7 +419,9 @@
                   "value": "See all",
                   "fontSize": 13,
                   "bold": true,
-                  "color": "#C8321A"
+                  "color": "#C8321A",
+                  "action": "see_all",
+                  "sectionTitle": "Dandiya ready"
                 }
               }
             ]

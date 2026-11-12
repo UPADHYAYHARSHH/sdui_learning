@@ -41,6 +41,8 @@
             "type": "chip",
             "props": {
               "label": "Diwali",
+              "action": "select_category",
+              "category": "Diwali",
               "selected": true
             }
           },
@@ -48,6 +50,8 @@
             "type": "chip",
             "props": {
               "label": "Gifts",
+              "action": "select_category",
+              "category": "Gifts",
               "selected": false
             }
           },
@@ -55,6 +59,8 @@
             "type": "chip",
             "props": {
               "label": "Decor",
+              "action": "select_category",
+              "category": "Decor",
               "selected": false
             }
           },
@@ -62,6 +68,8 @@
             "type": "chip",
             "props": {
               "label": "Fashion",
+              "action": "select_category",
+              "category": "Fashion",
               "selected": false
             }
           }
@@ -126,7 +134,9 @@
               "color": "#FFFFFF",
               "radius": 14,
               "padding": 12,
-              "alignment": "center"
+              "alignment": "center",
+              "action": "filter_price",
+              "price": 499
             },
             "children": [
               {
@@ -147,7 +157,9 @@
               "color": "#FFFFFF",
               "radius": 14,
               "padding": 12,
-              "alignment": "center"
+              "alignment": "center",
+              "action": "filter_price",
+              "price": 999
             },
             "children": [
               {
@@ -168,7 +180,9 @@
               "color": "#FFFFFF",
               "radius": 14,
               "padding": 12,
-              "alignment": "center"
+              "alignment": "center",
+              "action": "filter_price",
+              "price": 1999
             },
             "children": [
               {
@@ -381,7 +395,9 @@
                   "value": "See all",
                   "fontSize": 12,
                   "bold": true,
-                  "color": "#5A554C"
+                  "color": "#5A554C",
+                  "action": "see_all",
+                  "sectionTitle": "Diwali picks"
                 }
               }
             ]

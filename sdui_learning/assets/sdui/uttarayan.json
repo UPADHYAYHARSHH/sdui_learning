@@ -223,7 +223,9 @@
                   "value": "See all",
                   "fontSize": 12,
                   "bold": true,
-                  "color": "#5A554C"
+                  "color": "#5A554C",
+                  "action": "see_all",
+                  "sectionTitle": "Kite day picks"
                 }
               }
             ]

@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'sdui_video_player.dart';
 import '../../ui/category_listing_page.dart';
+import '../../ui/checkout_page.dart';
+import '../../ui/product_detail_sheet.dart';
+import '../../ui/see_all_page.dart';
 
 /// Builds one SDUI node: props + pre-built children → Widget.
 typedef SduiNodeBuilder =
@@ -30,9 +33,54 @@ class DynamicLayoutBuilder {
     Map<String, Map<String, dynamic>>? components,
     this.maxComponentDepth = 12,
     this.failUnknownVisibly = false,
+    this.onAction,
   }) : _components = Map<String, Map<String, dynamic>>.from(
          components ?? const {},
        );
+
+  /// Callback when user interacts with an action node (e.g. chip tap, filter button).
+  final void Function(String action, Map<String, dynamic> data)? onAction;
+
+  void _onAction(String? action, [Map<String, dynamic>? data]) {
+    if (action != null && action.isNotEmpty) {
+      onAction?.call(action, data ?? const {});
+    }
+  }
+
+  void _dispatchTapAction(
+    BuildContext context,
+    String? action,
+    Map<String, dynamic> props,
+  ) {
+    if (action == 'navigate_back' || action == 'back') {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+      return;
+    }
+    if (action == 'see_all' || action == 'open_see_all') {
+      if (onAction != null) {
+        _onAction('see_all', props);
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SeeAllPage(
+              title: (props['sectionTitle'] as String?) ?? 'All Picks',
+              initialCategory: (props['category'] as String?) ?? 'All',
+            ),
+          ),
+        );
+      }
+      return;
+    }
+    if (action == 'filter_price' || action == 'select_category') {
+      _onAction(action, props);
+      return;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const CategoryListingPage()),
+    );
+  }
 
   /// Named JSON templates resolved by `type: component` / `type: ref`.
   final Map<String, Map<String, dynamic>> _components;
@@ -147,7 +195,7 @@ class DynamicLayoutBuilder {
   // --- layout primitives ---
 
   Widget _column(Map<String, dynamic> props, List<Widget> children) {
-    return Padding(
+    final colWidget = Padding(
       padding: _edgeInsets(props['padding']),
       child: Column(
         mainAxisSize: _mainAxisSize(props['mainAxisSize']),
@@ -156,6 +204,18 @@ class DynamicLayoutBuilder {
         children: _withGap(children, _double(props['gap'], 0)),
       ),
     );
+
+    final action = props['action'] as String? ?? props['onTap'] as String?;
+    if (action != null) {
+      return Builder(
+        builder: (context) => InkWell(
+          onTap: () => _dispatchTapAction(context, action, props),
+          child: colWidget,
+        ),
+      );
+    }
+
+    return colWidget;
   }
 
   Widget _row(Map<String, dynamic> props, List<Widget> children) {
@@ -323,19 +383,7 @@ class DynamicLayoutBuilder {
       return Builder(
         builder: (context) {
           return InkWell(
-            onTap: () {
-              if (action == 'navigate_back') {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
-                }
-              } else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const CategoryListingPage(),
-                  ),
-                );
-              }
-            },
+            onTap: () => _dispatchTapAction(context, action, props),
             borderRadius: BorderRadius.circular(radius),
             child: containerWidget,
           );
@@ -396,13 +444,38 @@ class DynamicLayoutBuilder {
       shadows: shadow,
     );
 
-    return Text(
+    final textWidget = Text(
       value,
       textAlign: align,
       maxLines: _intOrNull(props['maxLines']),
       overflow: props['overflow'] == 'ellipsis' ? TextOverflow.ellipsis : null,
       style: GoogleFonts.plusJakartaSans(textStyle: baseStyle),
     );
+
+    final action = props['action'] as String? ?? props['onTap'] as String?;
+    final effectiveAction = action ??
+        (value.trim().toLowerCase() == 'see all' ? 'see_all' : null);
+
+    if (effectiveAction != null) {
+      return Builder(
+        builder: (context) => MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () => _dispatchTapAction(context, effectiveAction, props),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                child: textWidget,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return textWidget;
   }
 
   Widget _image(Map<String, dynamic> props) {
@@ -710,7 +783,7 @@ class DynamicLayoutBuilder {
         (selected ? Colors.transparent : const Color(0xFFD8D2C6));
     final minHeight = _double(props['minHeight'] ?? props['height'], 44);
 
-    return Container(
+    final chipWidget = Container(
       constraints: BoxConstraints(minHeight: minHeight),
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -729,6 +802,24 @@ class DynamicLayoutBuilder {
           fontSize: _double(props['fontSize'], 13),
           fontWeight: FontWeight.w700,
         ),
+      ),
+    );
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          final action = props['action'] as String? ?? 'select_category';
+          final category = props['category'] as String? ?? label;
+          _onAction(action, {
+            'action': action,
+            'category': category,
+            'label': label,
+            ...props,
+          });
+        },
+        borderRadius: BorderRadius.circular(_double(props['radius'], 20)),
+        child: chipWidget,
       ),
     );
   }
@@ -1115,7 +1206,7 @@ class DynamicLayoutBuilder {
     final imageColor = _color(props['imageColor']) ?? const Color(0xFFEBDDB0);
     final buttonText = props['buttonText'] as String? ?? 'Add';
 
-    return Container(
+    final comboWidget = Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1205,6 +1296,72 @@ class DynamicLayoutBuilder {
           ),
         ],
       ),
+    );
+
+    return Builder(
+      builder: (context) => MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => _openSduiProductDetail(
+              context,
+              ProductDetailData(
+                title: title,
+                brand: 'Festive Combo',
+                subtitle: subtitle,
+                priceText: price,
+                originalPriceText: originalPrice,
+                imageUrl: imageUrl,
+                imageColor: imageColor,
+              ),
+            ),
+            child: comboWidget,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openSduiProductDetail(
+    BuildContext context,
+    ProductDetailData detail,
+  ) {
+    showProductDetailCard(
+      context,
+      detail,
+      onActionPressed: (selectedSize) {
+        final slug = '${detail.brand}_${detail.title}_${selectedSize ?? ''}'
+            .toLowerCase()
+            .replaceAll(RegExp(r'[^a-z0-9]+'), '_');
+        ShoppingBagStore.instance.addItem(
+          CheckoutItem.fromDetail(
+            'sdui_$slug',
+            detail,
+            size: selectedSize,
+          ),
+        );
+        final sizeNote = selectedSize != null ? ' (Size $selectedSize)' : '';
+        final navigator = Navigator.of(context);
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text('${detail.title.trim()}$sizeNote added to bag!'),
+              duration: const Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+              action: SnackBarAction(
+                label: 'View Bag',
+                onPressed: () {
+                  navigator.push(
+                    MaterialPageRoute(builder: (_) => const CheckoutPage()),
+                  );
+                },
+              ),
+            ),
+          );
+      },
     );
   }
 
@@ -1321,28 +1478,28 @@ class DynamicLayoutBuilder {
     );
 
     return Builder(
-      builder: (context) => InkWell(
-        onTap: () {
-          final isKurta = title.toLowerCase().contains('kurta') ||
-              brand.toLowerCase().contains('kurta') ||
-              (imageUrl != null && imageUrl.contains('kurta'));
-          if (isKurta) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const CategoryListingPage(),
+      builder: (context) => MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _openSduiProductDetail(
+              context,
+              ProductDetailData(
+                title: title,
+                brand: brand,
+                priceText: price,
+                originalPriceText: originalPrice,
+                discountText: discount,
+                imageUrl: imageUrl,
+                imageColor: imageColor,
+                sizes: inferProductSizes(title, props['sizes']),
               ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('$title added to bag!'),
-                duration: const Duration(seconds: 1),
-              ),
-            );
-          }
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: cardWidget,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            child: cardWidget,
+          ),
+        ),
       ),
     );
   }
@@ -1355,53 +1512,106 @@ class DynamicLayoutBuilder {
         : const ['Home', 'Categories', 'Bag', 'Profile'];
 
     return Container(
-      color: Colors.white,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Color(0xFFE5DFD3))),
+      ),
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: SafeArea(
         top: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            for (var i = 0; i < items.length; i++)
-              Builder(
-                builder: (context) => GestureDetector(
-                  onTap: () {
-                    final item = items[i];
-                    if (item == 'Categories' || item == 'Kurtas') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const CategoryListingPage(),
+        child: AnimatedBuilder(
+          animation: ShoppingBagStore.instance,
+          builder: (context, _) {
+            final bagCount = ShoppingBagStore.instance.totalQuantity;
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                for (var i = 0; i < items.length; i++)
+                  Builder(
+                    builder: (context) => GestureDetector(
+                      onTap: () {
+                        final item = items[i];
+                        if (item == 'Categories' || item == 'Kurtas') {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CategoryListingPage(),
+                            ),
+                          );
+                        } else if (item == 'Bag') {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CheckoutPage(),
+                            ),
+                          );
+                        } else if (item == 'Home') {
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          }
+                        } else if (item == 'Profile') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Delivery address: Satellite, Ahmedabad 380015',
+                              ),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('$item tapped'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
                         ),
-                      );
-                    } else if (item == 'Home') {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('$item tapped'),
-                          duration: const Duration(seconds: 1),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              items[i],
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: i == activeIndex
+                                    ? const Color(0xFFC8321A)
+                                    : const Color(0xFF5A554C),
+                              ),
+                            ),
+                            if (items[i] == 'Bag' && bagCount > 0) ...[
+                              const SizedBox(width: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 1,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFC8321A),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  '$bagCount',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
-                      );
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    child: Text(
-                      items[i],
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: i == activeIndex
-                            ? const Color(0xFFC8321A)
-                            : const Color(0xFF5A554C),
                       ),
                     ),
                   ),
-                ),
-              ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );

@@ -307,13 +307,33 @@
         },
         "children": [
           {
-            "type": "text",
+            "type": "row",
             "props": {
-              "value": "Holi must haves",
-              "fontSize": 16,
-              "bold": true,
-              "color": "#14120F"
-            }
+              "mainAxisAlignment": "spaceBetween",
+              "crossAxisAlignment": "center"
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "value": "Holi must haves",
+                  "fontSize": 16,
+                  "bold": true,
+                  "color": "#14120F"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "See all",
+                  "fontSize": 13,
+                  "bold": true,
+                  "color": "#7A2FB5",
+                  "action": "see_all",
+                  "sectionTitle": "Holi must haves"
+                }
+              }
+            ]
           },
           {
             "type": "grid",
