@@ -34,7 +34,7 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
   DynamicLayoutBuilder _builder = DynamicLayoutBuilder();
   late final SduiActionRouter _actionRouter;
 
-  String _selectedCategory = 'Diwali';
+  String? _selectedCategory;
   int? _selectedMaxPrice;
 
   @override
@@ -51,7 +51,7 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
         oldWidget.repository != widget.repository) {
       _result = null;
       _error = null;
-      _selectedCategory = 'Diwali';
+      _selectedCategory = null;
       _selectedMaxPrice = null;
       _listen();
     }
@@ -132,8 +132,7 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
   void _handleAction(String action, Map<String, dynamic> data) {
     if (action == 'select_category') {
       final category =
-          (data['category'] as String? ?? data['label'] as String? ?? 'Diwali')
-              .trim();
+          (data['category'] as String? ?? data['label'] as String?)?.trim();
       setState(() => _selectedCategory = category);
       debugPrint('[SDUI][Interaction] Switched category to: $_selectedCategory');
     } else if (action == 'filter_price') {
@@ -151,7 +150,7 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
     } else if (action == 'open_search') {
       _actionRouter.openSearch(context, {
         ...data,
-        'searchHint': _searchHintFor(_selectedCategory),
+        'searchHint': _searchHintFor(_selectedCategory ?? 'all'),
         'products': _extractSduiProducts(
           _result?.root,
           festivalId: _result?.docId,
@@ -181,21 +180,22 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
         _extractSduiCategories(result?.root, extracted, festivalId);
 
     // Active category from live state or action payload
-    final rawCategory = _selectedCategory.trim().isNotEmpty
-        ? _selectedCategory.trim()
+    final activeCategory = (_selectedCategory != null &&
+            _selectedCategory!.trim().isNotEmpty)
+        ? _selectedCategory!.trim()
         : ((categoryFromData != null && categoryFromData.isNotEmpty)
             ? categoryFromData
-            : festivalId);
+            : null);
 
-    final isDefaultFestCategory =
-        rawCategory.toLowerCase() == festivalId ||
-        rawCategory.toLowerCase() == 'all';
+    final isDefaultFestCategory = activeCategory == null ||
+        activeCategory.toLowerCase() == festivalId ||
+        activeCategory.toLowerCase() == 'all';
 
     final initialCategory =
-        isDefaultFestCategory ? 'All' : rawCategory;
+        isDefaultFestCategory ? 'All' : activeCategory;
 
     var title = !isDefaultFestCategory
-        ? '$rawCategory picks'
+        ? '$activeCategory picks'
         : ((rawTitle != null && rawTitle.isNotEmpty)
             ? rawTitle
             : (result?.title.trim().isNotEmpty ?? false
@@ -402,7 +402,7 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
     final dynamicRoot = isDiwaliScreen
         ? _applyDynamicFilters(
             result.root,
-            _selectedCategory,
+            _selectedCategory ?? 'Diwali',
             _selectedMaxPrice,
           )
         : result.root;
