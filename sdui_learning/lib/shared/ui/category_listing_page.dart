@@ -51,10 +51,18 @@ class CategoryListingPage extends StatefulWidget {
     super.key,
     this.repository,
     this.initialSort = 'Sort',
+    this.title = 'Women · Kurtas',
+    this.category,
   });
 
   final LayoutRepository? repository;
   final String initialSort;
+
+  /// App-bar / header title (from SDUI `open_category`).
+  final String title;
+
+  /// Optional category hint used for analytics / future catalog queries.
+  final String? category;
 
   @override
   State<CategoryListingPage> createState() => _CategoryListingPageState();
@@ -64,7 +72,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   static const List<KurtaProduct> _allProducts = [
     KurtaProduct(
       id: 'p1',
-      brand: 'Brand A',
+      brand: 'Fabindia',
       title: 'Cotton straight kurta',
       price: 799,
       originalPrice: 1599,
@@ -74,7 +82,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p2',
-      brand: 'Brand B',
+      brand: 'Manyavar',
       title: 'Embroidered kurta set',
       price: 1199,
       originalPrice: 2399,
@@ -84,7 +92,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p3',
-      brand: 'Brand C',
+      brand: 'Global Desi',
       title: 'Block print kurta',
       price: 649,
       originalPrice: 1299,
@@ -94,7 +102,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p4',
-      brand: 'Brand D',
+      brand: 'Biba',
       title: 'Anarkali kurta',
       price: 1499,
       originalPrice: 2999,
@@ -104,7 +112,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p5',
-      brand: 'Brand E',
+      brand: 'Sojanya',
       title: 'Festive kurta',
       price: 999,
       originalPrice: 1999,
@@ -114,7 +122,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p6',
-      brand: 'Brand F',
+      brand: 'W for Woman',
       title: 'Linen kurta',
       price: 849,
       originalPrice: 1699,
@@ -124,7 +132,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p7',
-      brand: 'Brand G',
+      brand: 'Ada',
       title: 'Chikankari kurta',
       price: 1299,
       originalPrice: 2599,
@@ -134,7 +142,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     ),
     KurtaProduct(
       id: 'p8',
-      brand: 'Brand H',
+      brand: 'Aurelia',
       title: 'Printed A-line kurta',
       price: 899,
       originalPrice: 1799,
@@ -154,7 +162,8 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
 
   bool get _promoApplied => ShoppingBagStore.instance.promoApplied;
 
-  String _storeIdFor(KurtaProduct product) => 'kurta_${product.id}';
+  String _storeIdFor(KurtaProduct product, {String? size}) =>
+      ShoppingBagStore.canonicalId(product.id, size: size);
 
   void _onBagStoreChanged() {
     if (mounted) setState(() {});
@@ -192,6 +201,10 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
       list = list.where((p) => p.price <= _maxPrice!).toList();
     }
 
+    if (_selectedSize != null) {
+      list = list.where((p) => p.sizes.contains(_selectedSize)).toList();
+    }
+
     switch (_currentSort) {
       case 'Price: Low to High':
         list.sort((a, b) => a.price.compareTo(b.price));
@@ -207,6 +220,80 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
     }
 
     return list;
+  }
+
+  void _showFilterSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Text(
+                    'Filters',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF14120F),
+                    ),
+                  ),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.straighten),
+                  title: const Text('Size'),
+                  subtitle: Text(_selectedSize ?? 'All sizes'),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showSizeSheet();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.currency_rupee),
+                  title: const Text('Price'),
+                  subtitle: Text(_maxPrice == null ? 'All prices' : 'Under ₹$_maxPrice'),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showPriceSheet();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.storefront_outlined),
+                  title: const Text('Brand'),
+                  subtitle: Text(_selectedBrand ?? 'All brands'),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showBrandSheet();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.clear_all),
+                  title: const Text('Clear all filters'),
+                  onTap: () {
+                    setState(() {
+                      _selectedSize = null;
+                      _selectedBrand = null;
+                      _maxPrice = null;
+                    });
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showSortSheet() {
@@ -388,7 +475,10 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   }
 
   void _showBrandSheet() {
-    final brands = ['All', 'Brand A', 'Brand B', 'Brand C', 'Brand D', 'Brand E', 'Brand F'];
+    final brands = [
+      'All',
+      ...{for (final p in _allProducts) p.brand},
+    ];
 
     showModalBottomSheet<void>(
       context: context,
@@ -446,8 +536,6 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   }
 
   void _showProductDetail(KurtaProduct product) {
-    final storeId = _storeIdFor(product);
-    final inBag = ShoppingBagStore.instance.containsId(storeId);
     showProductDetailCard(
       context,
       ProductDetailData(
@@ -460,11 +548,13 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
         imageColor: product.placeholderColor,
         sizes: product.sizes,
       ),
-      actionLabel: inBag ? 'Remove from Bag' : 'Add to Bag',
-      actionColor: inBag ? const Color(0xFF1B7A3A) : const Color(0xFFC8321A),
+      actionLabel: 'Add to Bag',
+      actionColor: const Color(0xFFC8321A),
       onActionPressed: (selectedSize) {
         final chosenSize = selectedSize ?? product.sizes.first;
-        if (inBag) {
+        final storeId = _storeIdFor(product, size: chosenSize);
+        final wasInBag = ShoppingBagStore.instance.containsId(storeId);
+        if (wasInBag) {
           ShoppingBagStore.instance.removeItem(storeId);
         } else {
           ShoppingBagStore.instance.upsertItem(
@@ -481,18 +571,21 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
             ),
           );
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              inBag
-                  ? '${product.title} removed from Bag'
-                  : 'Added ${product.title} (Size $chosenSize) to Bag!',
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                wasInBag
+                    ? '${product.title} removed from Bag'
+                    : 'Added ${product.title} (Size $chosenSize) to Bag!',
+              ),
+              duration: const Duration(milliseconds: 1500),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor:
+                  wasInBag ? const Color(0xFF5A554C) : const Color(0xFF1B7A3A),
             ),
-            duration: const Duration(seconds: 2),
-            backgroundColor:
-                inBag ? const Color(0xFF5A554C) : const Color(0xFF1B7A3A),
-          ),
-        );
+          );
       },
     );
   }
@@ -552,7 +645,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Women · Kurtas',
+                            widget.title,
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -618,7 +711,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                         _buildChip(
                           label: 'Filter',
                           isActive: _selectedSize != null || _selectedBrand != null || _maxPrice != null,
-                          onTap: _showSortSheet,
+                          onTap: _showFilterSheet,
                         ),
                         const SizedBox(width: 8),
                         _buildChip(

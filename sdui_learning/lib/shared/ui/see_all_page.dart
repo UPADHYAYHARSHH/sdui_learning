@@ -44,6 +44,17 @@ class SeeAllProduct {
       final pct = (((originalPrice - price) * 100) / originalPrice).round();
       if (pct > 0) discount = '$pct% off';
     }
+    final rawCats = props['categories'] ?? props['category'];
+    final categories = <String>['diwali'];
+    if (rawCats is List) {
+      categories
+        ..clear()
+        ..addAll(rawCats.map((e) => e.toString().toLowerCase()));
+    } else if (rawCats != null && rawCats.toString().trim().isNotEmpty) {
+      categories
+        ..clear()
+        ..add(rawCats.toString().toLowerCase());
+    }
     return SeeAllProduct(
       id: id,
       brand: (props['brand'] as String? ?? 'Festive').trim(),
@@ -52,6 +63,7 @@ class SeeAllProduct {
       originalPrice: originalPrice,
       discount: discount,
       imageUrl: (props['imageUrl'] as String? ?? '').trim(),
+      categories: categories,
     );
   }
 
@@ -66,174 +78,8 @@ class SeeAllProduct {
   }
 }
 
-/// Shared catalog for Diwali / Gifts / Decor / Fashion filtering and [SeeAllPage].
-const List<SeeAllProduct> diwaliCatalogProducts = [
-  // Gifts
-  SeeAllProduct(
-    id: 'g1',
-    title: 'Gold tone watch',
-    brand: 'Titan Festive',
-    imageUrl: 'diwali/products/gold_tone_watch.jpg',
-    price: 999,
-    originalPrice: 1999,
-    discount: '50% off',
-    categories: ['gifts', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'g2',
-    title: 'Velvet potli bag',
-    brand: 'Craft Villa',
-    imageUrl: 'diwali/products/potli_bag.jpg',
-    price: 599,
-    originalPrice: 1199,
-    discount: '50% off',
-    categories: ['gifts', 'fashion', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'g3',
-    title: 'Brass diya gift set',
-    brand: 'Pooja Essentials',
-    imageUrl: 'diwali/products/brass_diya_set.jpg',
-    price: 1299,
-    originalPrice: 2599,
-    discount: '50% off',
-    categories: ['gifts', 'decor', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'g4',
-    title: 'Fairy light gift pack',
-    brand: 'Lumina',
-    imageUrl: 'diwali/products/fairy_light_set.jpg',
-    price: 399,
-    originalPrice: 799,
-    discount: '50% off',
-    categories: ['gifts', 'decor', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'g5',
-    title: 'Silver plated thali',
-    brand: 'Royal Silver',
-    imageUrl: 'diwali/categories/gift_sets.jpg',
-    price: 1499,
-    originalPrice: 2999,
-    discount: '50% off',
-    categories: ['gifts'],
-  ),
-  SeeAllProduct(
-    id: 'g6',
-    title: 'Festive dry fruit hamper',
-    brand: 'Nuts & More',
-    imageUrl: 'diwali/categories/jewellery.jpg',
-    price: 899,
-    originalPrice: 1799,
-    discount: '50% off',
-    categories: ['gifts'],
-  ),
-
-  // Decor
-  SeeAllProduct(
-    id: 'd1',
-    title: 'Fairy light set',
-    brand: 'Lumina',
-    imageUrl: 'diwali/products/fairy_light_set.jpg',
-    price: 399,
-    originalPrice: 799,
-    discount: '50% off',
-    categories: ['decor', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'd2',
-    title: 'Handcrafted terracotta diyas',
-    brand: 'Mitti Craft',
-    imageUrl: 'diwali/categories/diyas.jpg',
-    price: 299,
-    originalPrice: 599,
-    discount: '50% off',
-    categories: ['decor'],
-  ),
-  SeeAllProduct(
-    id: 'd3',
-    title: 'Brass diya set',
-    brand: 'Pooja Essentials',
-    imageUrl: 'diwali/products/brass_diya_set.jpg',
-    price: 1299,
-    originalPrice: 2599,
-    discount: '50% off',
-    categories: ['decor', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'd4',
-    title: 'LED warm curtain lights',
-    brand: 'Lumina',
-    imageUrl: 'diwali/categories/lights.jpg',
-    price: 699,
-    originalPrice: 1399,
-    discount: '50% off',
-    categories: ['decor'],
-  ),
-  SeeAllProduct(
-    id: 'd5',
-    title: 'Decorative golden toran',
-    brand: 'Festive Aura',
-    imageUrl: 'diwali/categories/lights.jpg',
-    price: 449,
-    originalPrice: 899,
-    discount: '50% off',
-    categories: ['decor'],
-  ),
-
-  // Fashion
-  SeeAllProduct(
-    id: 'f1',
-    title: 'Silk festive kurta',
-    brand: 'Manyavar',
-    imageUrl: 'diwali/products/silk_festive_kurta.jpg',
-    price: 799,
-    originalPrice: 1599,
-    discount: '50% off',
-    categories: ['fashion', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'f2',
-    title: 'Embroidered kurta',
-    brand: 'FabIndia',
-    imageUrl: 'diwali/products/embroidered_kurta.jpg',
-    price: 899,
-    originalPrice: 1799,
-    discount: '50% off',
-    categories: ['fashion', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'f3',
-    title: 'Nehru festive jacket',
-    brand: 'Raymond',
-    imageUrl: 'diwali/products/nehru_jacket.jpg',
-    price: 1499,
-    originalPrice: 2999,
-    discount: '50% off',
-    categories: ['fashion', 'diwali'],
-  ),
-  SeeAllProduct(
-    id: 'f4',
-    title: 'Chanderi festive saree',
-    brand: 'Virasat',
-    imageUrl: 'diwali/categories/sarees.jpg',
-    price: 1699,
-    originalPrice: 3399,
-    discount: '50% off',
-    categories: ['fashion'],
-  ),
-  SeeAllProduct(
-    id: 'f5',
-    title: 'Cotton straight kurta',
-    brand: 'Anouk',
-    imageUrl: 'diwali/categories/kurtas.jpg',
-    price: 499,
-    originalPrice: 999,
-    discount: '50% off',
-    categories: ['fashion'],
-  ),
-];
+/// See-all / search always take products extracted from the live SDUI tree.
+/// Empty list shows the empty state (no hardcoded Diwali catalog fallback).
 
 /// Full-screen "See all" product catalog with category, budget, and sort controls.
 class SeeAllPage extends StatefulWidget {
@@ -269,10 +115,8 @@ class _SeeAllPageState extends State<SeeAllPage> {
   late String _selectedCategory;
   int? _maxPrice;
   String _sortBy = 'Featured';
-  final Map<String, int> _bagQuantities = {};
 
-  List<SeeAllProduct> get _baseProducts =>
-      widget.products ?? diwaliCatalogProducts;
+  List<SeeAllProduct> get _baseProducts => widget.products ?? const [];
 
   @override
   void initState() {
@@ -281,6 +125,27 @@ class _SeeAllPageState extends State<SeeAllPage> {
         ? 'All'
         : _matchCategory(widget.initialCategory);
     _maxPrice = widget.initialMaxPrice;
+    ShoppingBagStore.instance.addListener(_onBagChanged);
+  }
+
+  @override
+  void dispose() {
+    ShoppingBagStore.instance.removeListener(_onBagChanged);
+    super.dispose();
+  }
+
+  void _onBagChanged() {
+    if (mounted) setState(() {});
+  }
+
+  int _bagQtyFor(SeeAllProduct product) {
+    var total = 0;
+    for (final item in ShoppingBagStore.instance.items) {
+      if (item.id == product.id || item.id.startsWith('${product.id}_')) {
+        total += item.quantity;
+      }
+    }
+    return total;
   }
 
   String _matchCategory(String raw) {
@@ -320,12 +185,9 @@ class _SeeAllPageState extends State<SeeAllPage> {
   }
 
   void _addToBag(SeeAllProduct product, {String? size}) {
-    setState(() {
-      _bagQuantities[product.id] = (_bagQuantities[product.id] ?? 0) + 1;
-    });
     ShoppingBagStore.instance.addItem(
       CheckoutItem(
-        id: 'seeall_${product.id}${size != null ? '_$size' : ''}',
+        id: ShoppingBagStore.canonicalId(product.id, size: size),
         title: product.title,
         brand: product.brand,
         price: product.price,
@@ -341,7 +203,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
       ..showSnackBar(
         SnackBar(
           content: Text('${product.title} added to bag'),
-          duration: const Duration(seconds: 2),
+          duration: const Duration(milliseconds: 1500),
           behavior: SnackBarBehavior.floating,
           action: SnackBarAction(
             label: 'View Bag',
@@ -571,7 +433,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
   }
 
   Widget _buildProductCard(SeeAllProduct product) {
-    final inBagCount = _bagQuantities[product.id] ?? 0;
+    final inBagCount = _bagQtyFor(product);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -717,7 +579,9 @@ class _SeeAllPageState extends State<SeeAllPage> {
             ),
             const SizedBox(height: 12),
             Text(
-              'No items match your filters',
+              _baseProducts.isEmpty
+                  ? 'No products from this screen'
+                  : 'No items match your filters',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -726,7 +590,9 @@ class _SeeAllPageState extends State<SeeAllPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              'Try switching category or clearing the price filter.',
+              _baseProducts.isEmpty
+                  ? 'This festival layout has no product cards to list yet.'
+                  : 'Try switching category or clearing the price filter.',
               textAlign: TextAlign.center,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
@@ -805,7 +671,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
   }
 
   void _showProductDetail(SeeAllProduct product) {
-    final inBagCount = _bagQuantities[product.id] ?? 0;
+    final inBagCount = _bagQtyFor(product);
     showProductDetailCard(
       context,
       ProductDetailData(

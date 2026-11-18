@@ -1,6 +1,7 @@
 {
   "id": "holi",
-  "title": "Home · Holi",
+  "schemaVersion": 1,
+  "title": "Home \u00b7 Holi",
   "background": "#F7F5F0",
   "showAppBar": false,
   "theme": {
@@ -34,13 +35,21 @@
         "type": "row",
         "props": {
           "scroll": true,
-          "padding": { "left": 16, "right": 16, "top": 2, "bottom": 4 },
+          "padding": {
+            "left": 16,
+            "right": 16,
+            "top": 2,
+            "bottom": 4
+          },
           "gap": 14
         },
         "children": [
           {
             "type": "column",
-            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 4,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "container",
@@ -68,7 +77,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 4,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "container",
@@ -96,7 +108,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 4,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "container",
@@ -124,7 +139,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 4,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "container",
@@ -152,7 +170,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 4, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 4,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "container",
@@ -183,14 +204,19 @@
       {
         "type": "row",
         "props": {
-          "padding": { "left": 16, "right": 16 },
+          "padding": {
+            "left": 16,
+            "right": 16
+          },
           "gap": 8,
           "height": 185
         },
         "children": [
           {
             "type": "expanded",
-            "props": { "flex": 6 },
+            "props": {
+              "flex": 6
+            },
             "children": [
               {
                 "type": "container",
@@ -239,11 +265,15 @@
           },
           {
             "type": "expanded",
-            "props": { "flex": 5 },
+            "props": {
+              "flex": 5
+            },
             "children": [
               {
                 "type": "column",
-                "props": { "gap": 8 },
+                "props": {
+                  "gap": 8
+                },
                 "children": [
                   {
                     "type": "container",
@@ -302,7 +332,10 @@
       {
         "type": "column",
         "props": {
-          "padding": { "left": 16, "right": 16 },
+          "padding": {
+            "left": 16,
+            "right": 16
+          },
           "gap": 6
         },
         "children": [
@@ -351,8 +384,8 @@
                   "imageColor": "#E9C9B8",
                   "brand": "Holi Drip",
                   "title": "White cotton tee",
-                  "price": "₹299",
-                  "originalPrice": "₹599",
+                  "price": "\u20b9299",
+                  "originalPrice": "\u20b9599",
                   "discount": "50% off"
                 }
               },
@@ -364,8 +397,8 @@
                   "imageColor": "#C9D8CF",
                   "brand": "Rangoli",
                   "title": "Herbal colour set",
-                  "price": "₹199",
-                  "originalPrice": "₹399",
+                  "price": "\u20b9199",
+                  "originalPrice": "\u20b9399",
                   "discount": "50% off"
                 }
               },
@@ -377,8 +410,8 @@
                   "imageColor": "#D9D3EA",
                   "brand": "AquaBlast",
                   "title": "Pressure pichkari",
-                  "price": "₹149",
-                  "originalPrice": "₹299",
+                  "price": "\u20b9149",
+                  "originalPrice": "\u20b9299",
                   "discount": "50% off"
                 }
               },
@@ -390,8 +423,8 @@
                   "imageColor": "#EBDDB0",
                   "brand": "Manyavar",
                   "title": "Holi kurta set",
-                  "price": "₹799",
-                  "originalPrice": "₹1599",
+                  "price": "\u20b9799",
+                  "originalPrice": "\u20b91599",
                   "discount": "50% off"
                 }
               },
@@ -403,8 +436,8 @@
                   "imageColor": "#E9C9B8",
                   "brand": "DermaCare",
                   "title": "Sun & skin shield",
-                  "price": "₹349",
-                  "originalPrice": "₹699",
+                  "price": "\u20b9349",
+                  "originalPrice": "\u20b9699",
                   "discount": "50% off"
                 }
               },
@@ -416,8 +449,8 @@
                   "imageColor": "#C9D8CF",
                   "brand": "Festive Club",
                   "title": "Water bucket cap",
-                  "price": "₹199",
-                  "originalPrice": "₹399",
+                  "price": "\u20b9199",
+                  "originalPrice": "\u20b9399",
                   "discount": "50% off"
                 }
               }
@@ -428,7 +461,11 @@
       {
         "type": "container",
         "props": {
-          "margin": { "left": 16, "right": 16, "bottom": 12 },
+          "margin": {
+            "left": 16,
+            "right": 16,
+            "bottom": 12
+          },
           "radius": 14,
           "color": "#7A2FB5",
           "padding": 16
@@ -436,7 +473,10 @@
         "children": [
           {
             "type": "column",
-            "props": { "gap": 4, "crossAxisAlignment": "start" },
+            "props": {
+              "gap": 4,
+              "crossAxisAlignment": "start"
+            },
             "children": [
               {
                 "type": "text",

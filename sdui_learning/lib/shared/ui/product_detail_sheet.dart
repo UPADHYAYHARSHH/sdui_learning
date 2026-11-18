@@ -356,7 +356,7 @@ void showProductDetailCard(
                                 content: Text(
                                   '${product.title.trim()}$sizeNote added to bag!',
                                 ),
-                                duration: const Duration(seconds: 2),
+                                duration: const Duration(milliseconds: 1500),
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );

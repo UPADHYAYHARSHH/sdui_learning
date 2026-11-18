@@ -22,9 +22,20 @@ class LayoutLoadResult {
 
   final bool fromCache;
 
+  /// True when [schemaVersion] is newer than the app supports.
+  bool get schemaUnsupported =>
+      schemaVersion > LayoutRepository.supportedSchemaVersion;
+
   String get title => data['title'] as String? ?? docId;
 
   String? get backgroundHex => data['background'] as String?;
+
+  int get schemaVersion {
+    final raw = data['schemaVersion'];
+    if (raw is num) return raw.toInt();
+    if (raw is String) return int.tryParse(raw) ?? 1;
+    return 1;
+  }
 
   /// Nested layout tree — model-free.
   Map<String, dynamic>? get root {
@@ -34,9 +45,6 @@ class LayoutLoadResult {
   }
 
   /// Reusable component templates keyed by stable id.
-  ///
-  /// Stored on the same screen document under `components` for backward
-  /// compatibility (no new collection required).
   Map<String, Map<String, dynamic>> get components {
     final raw = data['components'];
     if (raw is! Map) return const {};
@@ -60,6 +68,7 @@ class LayoutLoadResult {
 /// Streams `screens/{docId}` as raw JSON for the dynamic layout engine.
 class LayoutRepository {
   static const defaultDocId = 'holi';
+  static const supportedSchemaVersion = 1;
   static const _tag = '[SDUI][Layout]';
 
   LayoutRepository({
@@ -76,10 +85,10 @@ class LayoutRepository {
         final snap = await _firestore.collection('screens').doc(docId).get();
         if (snap.exists && snap.data() != null) {
           debugPrint('$_tag load → Firestore screens/$docId');
-          return LayoutLoadResult(
-            docId: docId,
-            data: _normalize(snap.data()!),
-            fromCache: false,
+          return _fromMap(
+            docId,
+            snap.data()!,
+            fromCache: snap.metadata.isFromCache,
           );
         }
       } catch (e, st) {
@@ -98,25 +107,66 @@ class LayoutRepository {
     }
 
     debugPrint('$_tag watch LIVE → screens/$docId');
-    return firestore.collection('screens').doc(docId).snapshots().asyncMap((
-      snap,
-    ) async {
-      if (snap.exists && snap.data() != null) {
-        final data = _normalize(snap.data()!);
-        debugPrint(
-          '$_tag snapshot LIVE | title="${data['title']}" | '
-          'root.type=${(data['root'] as Map?)?['type']} | '
-          'components=${(data['components'] as Map?)?.length ?? 0}',
+    late StreamController<LayoutLoadResult> controller;
+    StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? sub;
+    var emitted = false;
+
+    controller = StreamController<LayoutLoadResult>.broadcast(
+      onListen: () {
+        // Prefer a fast seed while waiting for the first live snapshot.
+        unawaited(() async {
+          try {
+            final seed = await _loadSeed(docId);
+            if (!controller.isClosed && !emitted) {
+              controller.add(seed);
+            }
+          } catch (_) {}
+        }());
+
+        sub = firestore.collection('screens').doc(docId).snapshots().listen(
+          (snap) async {
+            if (snap.exists && snap.data() != null) {
+              final result = _fromMap(
+                docId,
+                snap.data()!,
+                fromCache: snap.metadata.isFromCache,
+              );
+              debugPrint(
+                '$_tag snapshot ${result.fromCache ? 'CACHE' : 'LIVE'} | '
+                'title="${result.title}" | schema=v${result.schemaVersion} | '
+                'root.type=${(result.data['root'] as Map?)?['type']}',
+              );
+              emitted = true;
+              if (!controller.isClosed) controller.add(result);
+              return;
+            }
+            debugPrint('$_tag screens/$docId missing → seed');
+            emitted = true;
+            if (!controller.isClosed) {
+              controller.add(await _loadSeed(docId));
+            }
+          },
+          onError: (Object e, StackTrace st) async {
+            debugPrint('$_tag screens/$docId stream error: $e\n$st');
+            if (!emitted) {
+              try {
+                final seed = await _loadSeed(docId);
+                emitted = true;
+                if (!controller.isClosed) controller.add(seed);
+                return;
+              } catch (_) {}
+            }
+            if (!controller.isClosed) controller.addError(e, st);
+          },
         );
-        return LayoutLoadResult(docId: docId, data: data, fromCache: false);
-      }
-      debugPrint('$_tag screens/$docId missing → seed');
-      return _loadSeed(docId);
-    });
+      },
+      onCancel: () => sub?.cancel(),
+    );
+
+    return controller.stream;
   }
 
   /// Streams the active festival configured in Firestore `config/active`.
-  /// Updates in real-time whenever `festivalId` changes in Firebase.
   Stream<LayoutLoadResult> watchActive() {
     final firestore = _firestore;
     if (!firebaseReady || firestore == null) {
@@ -183,30 +233,43 @@ class LayoutRepository {
     return controller.stream;
   }
 
-  /// Deep-copy Maps so callers can safely mutate without corrupting cache.
+  LayoutLoadResult _fromMap(
+    String docId,
+    Map<String, dynamic> raw, {
+    required bool fromCache,
+  }) {
+    final data = _normalize(raw);
+    final result = LayoutLoadResult(
+      docId: docId,
+      data: data,
+      fromCache: fromCache,
+    );
+    if (result.schemaUnsupported) {
+      debugPrint(
+        '$_tag unsupported schemaVersion=${result.schemaVersion} '
+        '(app supports <= $supportedSchemaVersion)',
+      );
+    }
+    return result;
+  }
+
   Map<String, dynamic> _normalize(Map<String, dynamic> raw) {
     return Map<String, dynamic>.from(jsonDecode(jsonEncode(raw)) as Map);
   }
 
   Future<LayoutLoadResult> _loadSeed(String docId) async {
-    final candidates = [
-      'assets/sdui/$docId.json',
-      'assets/sdui/holi.json',
-      'assets/sdui/uttarayan.json',
-      'assets/sdui/navratri.json',
-      'assets/sdui/diwali.json',
-      'assets/sdui/layout_demo.json',
-    ];
-    for (final path in candidates) {
-      try {
-        final raw = await rootBundle.loadString(path);
-        final map = jsonDecode(raw) as Map<String, dynamic>;
-        debugPrint('$_tag seed loaded $path');
-        return LayoutLoadResult(docId: docId, data: map, fromCache: true);
-      } catch (_) {
-        // try next
-      }
+    final primary = 'assets/sdui/$docId.json';
+    try {
+      final raw = await rootBundle.loadString(primary);
+      final map = jsonDecode(raw) as Map<String, dynamic>;
+      debugPrint('$_tag seed loaded $primary');
+      return _fromMap(docId, map, fromCache: true);
+    } catch (e) {
+      debugPrint('$_tag exact seed missing for $docId ($e)');
     }
-    throw StateError('No layout seed found for $docId');
+    throw StateError(
+      'No layout seed found for "$docId". '
+      'Add assets/sdui/$docId.json or create screens/$docId in Firestore.',
+    );
   }
 }

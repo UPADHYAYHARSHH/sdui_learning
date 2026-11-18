@@ -1,0 +1,499 @@
+{
+  "id": "order_confirmation",
+  "title": "Order Confirmed",
+  "background": "#F7F5F0",
+  "showAppBar": true,
+  "theme": {
+    "primary": "#C8321A",
+    "secondary": "#14120F",
+    "background": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "onPrimary": "#FFFFFF",
+    "onBackground": "#14120F"
+  },
+  "root": {
+    "type": "column",
+    "props": {
+      "gap": 14,
+      "crossAxisAlignment": "stretch",
+      "padding": { "left": 16, "right": 16, "top": 16, "bottom": 32 }
+    },
+    "children": [
+      {
+        "type": "container",
+        "props": {
+          "color": "#FFFFFF",
+          "radius": 20,
+          "borderColor": "#E5DFD3",
+          "padding": { "left": 20, "right": 20, "top": 20, "bottom": 20 }
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 10, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 64,
+                  "height": 64,
+                  "color": "#EAF6EE",
+                  "shape": "circle",
+                  "borderColor": "#1B7A3A",
+                  "alignment": "center"
+                },
+                "children": [
+                  {
+                    "type": "icon",
+                    "props": {
+                      "name": "check_circle",
+                      "size": 38,
+                      "color": "#1B7A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Order Placed Successfully!",
+                  "fontSize": 20,
+                  "bold": true,
+                  "color": "#14120F",
+                  "align": "center"
+                }
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Thank you for your order! We are preparing your items for delivery.",
+                  "fontSize": 13,
+                  "color": "#5A554C",
+                  "align": "center"
+                }
+              },
+              {
+                "type": "container",
+                "props": {
+                  "color": "#F7F5F0",
+                  "radius": 10,
+                  "borderColor": "#E5DFD3",
+                  "padding": { "left": 14, "right": 14, "top": 8, "bottom": 8 },
+                  "action": "copy_order_id",
+                  "orderId": "{{orderId}}"
+                },
+                "children": [
+                  {
+                    "type": "row",
+                    "props": { "gap": 8, "crossAxisAlignment": "center" },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Order ID: ",
+                          "fontSize": 12,
+                          "color": "#5A554C"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "{{orderId}}",
+                          "fontSize": 13,
+                          "bold": true,
+                          "color": "#C8321A"
+                        }
+                      },
+                      {
+                        "type": "icon",
+                        "props": {
+                          "name": "copy",
+                          "size": 14,
+                          "color": "#5A554C"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "props": {
+                  "value": "Placed on {{createdAtFormatted}}",
+                  "fontSize": 11,
+                  "color": "#5A554C",
+                  "align": "center"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "color": "#FFFFFF",
+          "radius": 16,
+          "borderColor": "#E5DFD3",
+          "padding": { "left": 16, "right": 16, "top": 16, "bottom": 16 }
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 12, "crossAxisAlignment": "stretch" },
+            "children": [
+              {
+                "type": "row",
+                "props": { "gap": 10, "crossAxisAlignment": "center" },
+                "children": [
+                  {
+                    "type": "container",
+                    "props": {
+                      "width": 36,
+                      "height": 36,
+                      "color": "#FFF1ED",
+                      "radius": 10,
+                      "alignment": "center"
+                    },
+                    "children": [
+                      {
+                        "type": "icon",
+                        "props": {
+                          "name": "local_shipping",
+                          "size": 20,
+                          "color": "#C8321A"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 2, "crossAxisAlignment": "start" },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Delivery Details",
+                          "fontSize": 13,
+                          "bold": true,
+                          "color": "#14120F"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "{{estimatedDelivery}}",
+                          "fontSize": 11,
+                          "bold": true,
+                          "color": "#1B7A3A"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "props": {
+                  "color": "#F7F5F0",
+                  "radius": 12,
+                  "borderColor": "#E5DFD3",
+                  "padding": { "left": 12, "right": 12, "top": 12, "bottom": 12 }
+                },
+                "children": [
+                  {
+                    "type": "row",
+                    "props": { "gap": 8, "crossAxisAlignment": "start" },
+                    "children": [
+                      {
+                        "type": "icon",
+                        "props": {
+                          "name": "location_on",
+                          "size": 16,
+                          "color": "#5A554C"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "props": { "gap": 2, "crossAxisAlignment": "start" },
+                        "children": [
+                          {
+                            "type": "text",
+                            "props": {
+                              "value": "Delivering to {{deliveryLabel}}",
+                              "fontSize": 12,
+                              "bold": true,
+                              "color": "#14120F"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "props": {
+                              "value": "{{deliveryAddress}}",
+                              "fontSize": 12,
+                              "color": "#5A554C"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "color": "#FFFFFF",
+          "radius": 16,
+          "borderColor": "#E5DFD3",
+          "padding": { "left": 16, "right": 16, "top": 16, "bottom": 16 }
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 10, "crossAxisAlignment": "stretch" },
+            "children": [
+              {
+                "type": "row",
+                "props": { "mainAxisAlignment": "spaceBetween", "crossAxisAlignment": "center" },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Items in this Order",
+                      "fontSize": 13,
+                      "bold": true,
+                      "color": "#14120F"
+                    }
+                  },
+                  {
+                    "type": "container",
+                    "props": {
+                      "color": "#F3EFE6",
+                      "radius": 6,
+                      "padding": { "left": 8, "right": 8, "top": 2, "bottom": 2 }
+                    },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "{{itemCount}} items",
+                          "fontSize": 11,
+                          "bold": true,
+                          "color": "#14120F"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "color": "#FFFFFF",
+          "radius": 16,
+          "borderColor": "#E5DFD3",
+          "padding": { "left": 16, "right": 16, "top": 16, "bottom": 16 }
+        },
+        "children": [
+          {
+            "type": "column",
+            "props": { "gap": 10, "crossAxisAlignment": "stretch" },
+            "children": [
+              {
+                "type": "row",
+                "props": { "gap": 10, "crossAxisAlignment": "center" },
+                "children": [
+                  {
+                    "type": "container",
+                    "props": {
+                      "width": 36,
+                      "height": 36,
+                      "color": "#EAF6EE",
+                      "radius": 10,
+                      "alignment": "center"
+                    },
+                    "children": [
+                      {
+                        "type": "icon",
+                        "props": {
+                          "name": "check_circle_outline",
+                          "size": 20,
+                          "color": "#1B7A3A"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "column",
+                    "props": { "gap": 2, "crossAxisAlignment": "start" },
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Payment Summary",
+                          "fontSize": 13,
+                          "bold": true,
+                          "color": "#14120F"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "value": "Paid via {{paymentMethod}}",
+                          "fontSize": 11,
+                          "bold": true,
+                          "color": "#1B7A3A"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "divider",
+                "props": { "height": 1, "color": "#E5DFD3" }
+              },
+              {
+                "type": "row",
+                "props": { "mainAxisAlignment": "spaceBetween", "crossAxisAlignment": "center" },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Total Paid",
+                      "fontSize": 15,
+                      "bold": true,
+                      "color": "#14120F"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "{{totalPayableFormatted}}",
+                      "fontSize": 17,
+                      "bold": true,
+                      "color": "#C8321A"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "props": {
+          "color": "#FFFFFF",
+          "radius": 16,
+          "borderColor": "#E5DFD3",
+          "padding": { "left": 14, "right": 14, "top": 14, "bottom": 14 }
+        },
+        "children": [
+          {
+            "type": "row",
+            "props": { "gap": 12, "crossAxisAlignment": "center" },
+            "children": [
+              {
+                "type": "container",
+                "props": {
+                  "width": 36,
+                  "height": 36,
+                  "color": "#F3EFE6",
+                  "radius": 10,
+                  "alignment": "center"
+                },
+                "children": [
+                  {
+                    "type": "icon",
+                    "props": {
+                      "name": "email",
+                      "size": 20,
+                      "color": "#14120F"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "column",
+                "props": { "gap": 2, "crossAxisAlignment": "start" },
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "Order Updates",
+                      "fontSize": 12,
+                      "bold": true,
+                      "color": "#14120F"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "value": "SMS & WhatsApp confirmations sent with live tracking.",
+                      "fontSize": 11,
+                      "color": "#5A554C"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "expansion_tile",
+        "props": {
+          "title": "View API Request Details",
+          "subtitle": "Dummy Request Sent · 201 Created · /api/v1/orders",
+          "icon": "terminal",
+          "initiallyExpanded": false
+        },
+        "children": [
+          {
+            "type": "container",
+            "props": {
+              "color": "#F7F5F0",
+              "radius": 10,
+              "borderColor": "#E5DFD3",
+              "padding": { "left": 12, "right": 12, "top": 12, "bottom": 12 }
+            },
+            "children": [
+              {
+                "type": "selectable_text",
+                "props": {
+                  "value": "{{requestPayloadJson}}",
+                  "monospace": true,
+                  "fontSize": 10,
+                  "color": "#14120F"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "props": {
+          "label": "Continue Shopping",
+          "action": "continue_shopping",
+          "fullWidth": true,
+          "backgroundColor": "#14120F",
+          "textColor": "#FFFFFF",
+          "radius": 12,
+          "fontSize": 14,
+          "bold": true
+        }
+      }
+    ]
+  }
+}

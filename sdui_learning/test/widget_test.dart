@@ -13,8 +13,13 @@ void main() {
     await tester.pumpWidget(
       FestivalApp(layoutRepository: layoutRepository),
     );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    for (var i = 0; i < 40; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 25)),
+      );
+      await tester.pump();
+      if (find.text('Holi must haves').evaluate().isNotEmpty) break;
+    }
 
     expect(find.text('Delivering to Home'), findsOneWidget);
     expect(find.text('Satellite, Ahmedabad 380015'), findsOneWidget);

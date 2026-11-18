@@ -1,6 +1,7 @@
 {
   "id": "navratri",
-  "title": "Home · Navratri",
+  "schemaVersion": 1,
+  "title": "Home \u00b7 Navratri",
   "background": "#F7F5F0",
   "showAppBar": false,
   "theme": {
@@ -50,7 +51,10 @@
       {
         "type": "row",
         "props": {
-          "padding": { "left": 16, "right": 16 },
+          "padding": {
+            "left": 16,
+            "right": 16
+          },
           "gap": 12,
           "expandChildren": true
         },
@@ -151,13 +155,19 @@
         "type": "row",
         "props": {
           "scroll": true,
-          "padding": { "left": 16, "right": 16 },
+          "padding": {
+            "left": 16,
+            "right": 16
+          },
           "gap": 16
         },
         "children": [
           {
             "type": "column",
-            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 6,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "image",
@@ -186,7 +196,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 6,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "image",
@@ -215,7 +228,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 6,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "image",
@@ -244,7 +260,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 6,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "image",
@@ -273,7 +292,10 @@
           },
           {
             "type": "column",
-            "props": { "gap": 6, "crossAxisAlignment": "center" },
+            "props": {
+              "gap": 6,
+              "crossAxisAlignment": "center"
+            },
             "children": [
               {
                 "type": "image",
@@ -305,7 +327,10 @@
       {
         "type": "column",
         "props": {
-          "padding": { "left": 16, "right": 16 },
+          "padding": {
+            "left": 16,
+            "right": 16
+          },
           "gap": 12
         },
         "children": [
@@ -336,8 +361,8 @@
                   "imageColor": "#E9C9B8",
                   "brand": "Brand A",
                   "title": "Mirror work choli",
-                  "price": "₹1999",
-                  "originalPrice": "₹3999",
+                  "price": "\u20b91999",
+                  "originalPrice": "\u20b93999",
                   "discount": "50% off"
                 }
               },
@@ -351,8 +376,8 @@
                   "imageColor": "#D9D3EA",
                   "brand": "Brand B",
                   "title": "Printed ghagra",
-                  "price": "₹1499",
-                  "originalPrice": "₹2999",
+                  "price": "\u20b91499",
+                  "originalPrice": "\u20b92999",
                   "discount": "50% off"
                 }
               },
@@ -366,8 +391,8 @@
                   "imageColor": "#C9D8CF",
                   "brand": "Brand C",
                   "title": "Kediyu set",
-                  "price": "₹1199",
-                  "originalPrice": "₹2399",
+                  "price": "\u20b91199",
+                  "originalPrice": "\u20b92399",
                   "discount": "50% off"
                 }
               },
@@ -381,8 +406,8 @@
                   "imageColor": "#EBDDB0",
                   "brand": "Brand D",
                   "title": "Oxidised necklace",
-                  "price": "₹499",
-                  "originalPrice": "₹999",
+                  "price": "\u20b9499",
+                  "originalPrice": "\u20b9999",
                   "discount": "50% off"
                 }
               }
@@ -393,7 +418,10 @@
       {
         "type": "column",
         "props": {
-          "padding": { "left": 16, "right": 16 },
+          "padding": {
+            "left": 16,
+            "right": 16
+          },
           "gap": 12
         },
         "children": [
@@ -444,8 +472,8 @@
                   "imageColor": "#C9D8CF",
                   "brand": "Brand E",
                   "title": "Dandiya sticks",
-                  "price": "₹299",
-                  "originalPrice": "₹599",
+                  "price": "\u20b9299",
+                  "originalPrice": "\u20b9599",
                   "discount": "50% off"
                 }
               },
@@ -460,8 +488,8 @@
                   "imageColor": "#E9C9B8",
                   "brand": "Brand F",
                   "title": "Kolhapuri sandals",
-                  "price": "₹599",
-                  "originalPrice": "₹1199",
+                  "price": "\u20b9599",
+                  "originalPrice": "\u20b91199",
                   "discount": "50% off"
                 }
               },
@@ -476,8 +504,8 @@
                   "imageColor": "#D9D3EA",
                   "brand": "Brand G",
                   "title": "Batwa bag",
-                  "price": "₹449",
-                  "originalPrice": "₹899",
+                  "price": "\u20b9449",
+                  "originalPrice": "\u20b9899",
                   "discount": "50% off"
                 }
               }

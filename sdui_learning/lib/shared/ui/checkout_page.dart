@@ -1,276 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../commerce/checkout_pricing.dart';
+import '../commerce/shopping_bag_store.dart';
+import '../sdui/layout/dynamic_layout_builder.dart';
 import 'product_detail_sheet.dart';
 
-/// Parses a rupee price label such as `'₹1,299'` into integer rupees.
-int parseRupeeAmount(String? text) {
-  if (text == null || text.isEmpty) return 0;
-  final digits = text.replaceAll(RegExp(r'[^0-9]'), '');
-  return int.tryParse(digits) ?? 0;
-}
-
-/// Formats integer rupees as `'₹1299'`.
-String formatRupees(int amount) => '₹$amount';
-
-/// Line item shown in the shopping bag and checkout summary.
-class CheckoutItem {
-  const CheckoutItem({
-    required this.id,
-    required this.title,
-    required this.brand,
-    required this.price,
-    int? originalPrice,
-    this.discount,
-    this.imageUrl,
-    this.imageColor = const Color(0xFFE9E3D7),
-    this.size,
-    this.subtitle,
-    this.quantity = 1,
-  }) : originalPrice = originalPrice ?? price;
-
-  /// Builds a [CheckoutItem] from a shared [ProductDetailData] card payload.
-  factory CheckoutItem.fromDetail(
-    String id,
-    ProductDetailData product, {
-    String? size,
-    int quantity = 1,
-  }) {
-    final parsedPrice = parseRupeeAmount(product.priceText);
-    final parsedMrp = parseRupeeAmount(product.originalPriceText);
-    return CheckoutItem(
-      id: id,
-      title: product.title,
-      brand: product.brand,
-      price: parsedPrice,
-      originalPrice: parsedMrp > parsedPrice ? parsedMrp : parsedPrice,
-      discount: product.discountText,
-      imageUrl: product.imageUrl,
-      imageColor: product.imageColor,
-      size: size,
-      subtitle: product.subtitle,
-      quantity: quantity,
-    );
-  }
-
-  final String id;
-  final String title;
-  final String brand;
-  final int price;
-  final int originalPrice;
-  final String? discount;
-  final String? imageUrl;
-  final Color imageColor;
-  final String? size;
-  final String? subtitle;
-  final int quantity;
-
-  int get effectiveOriginalPrice => originalPrice > price ? originalPrice : price;
-  int get lineTotal => price * quantity;
-  int get lineOriginalTotal => effectiveOriginalPrice * quantity;
-  int get lineDiscount => lineOriginalTotal - lineTotal;
-
-  CheckoutItem copyWith({
-    int? quantity,
-    String? size,
-  }) {
-    return CheckoutItem(
-      id: id,
-      title: title,
-      brand: brand,
-      price: price,
-      originalPrice: originalPrice,
-      discount: discount,
-      imageUrl: imageUrl,
-      imageColor: imageColor,
-      size: size ?? this.size,
-      subtitle: subtitle,
-      quantity: quantity ?? this.quantity,
-    );
-  }
-}
-
-/// Price calculation summary shared by the breakdown card and dummy API payload.
-class CheckoutPriceSummary {
-  const CheckoutPriceSummary({
-    required this.itemCount,
-    required this.totalMrp,
-    required this.mrpDiscount,
-    required this.subtotal,
-    required this.promoDiscount,
-    required this.deliveryFee,
-    required this.totalPayable,
-    required this.totalSavings,
-  });
-
-  factory CheckoutPriceSummary.calculate(
-    List<CheckoutItem> items, {
-    required bool promoApplied,
-  }) {
-    var itemCount = 0;
-    var totalMrp = 0;
-    var subtotal = 0;
-
-    for (final item in items) {
-      itemCount += item.quantity;
-      totalMrp += item.lineOriginalTotal;
-      subtotal += item.lineTotal;
-    }
-
-    final mrpDiscount = (totalMrp - subtotal).clamp(0, totalMrp);
-    final promoDiscount =
-        promoApplied && subtotal > 0 ? (subtotal * 0.10).round() : 0;
-    final deliveryFee = subtotal == 0 || subtotal >= 499 ? 0 : 49;
-    final totalPayable =
-        (subtotal - promoDiscount + deliveryFee).clamp(0, totalMrp + deliveryFee);
-    final totalSavings = mrpDiscount + promoDiscount;
-
-    return CheckoutPriceSummary(
-      itemCount: itemCount,
-      totalMrp: totalMrp,
-      mrpDiscount: mrpDiscount,
-      subtotal: subtotal,
-      promoDiscount: promoDiscount,
-      deliveryFee: deliveryFee,
-      totalPayable: totalPayable,
-      totalSavings: totalSavings,
-    );
-  }
-
-  final int itemCount;
-  final int totalMrp;
-  final int mrpDiscount;
-  final int subtotal;
-  final int promoDiscount;
-  final int deliveryFee;
-  final int totalPayable;
-  final int totalSavings;
-}
-
-/// Simulated response returned by the dummy order placement request.
-class OrderConfirmation {
-  const OrderConfirmation({
-    required this.orderId,
-    required this.status,
-    required this.createdAt,
-    required this.requestPayload,
-    required this.totalPayable,
-    required this.itemCount,
-    required this.paymentMethod,
-  });
-
-  final String orderId;
-  final String status;
-  final DateTime createdAt;
-  final Map<String, dynamic> requestPayload;
-  final int totalPayable;
-  final int itemCount;
-  final String paymentMethod;
-}
-
-/// Callback signature allowing callers or tests to override order submission.
-typedef PlaceOrderHandler = Future<OrderConfirmation> Function(
-  Map<String, dynamic> requestPayload,
-);
-
-/// Shared shopping bag store synchronized across SDUI Home, See All, Categories,
-/// and the full-screen [CheckoutPage].
-class ShoppingBagStore extends ChangeNotifier {
-  ShoppingBagStore._();
-
-  static final ShoppingBagStore instance = ShoppingBagStore._();
-
-  final Map<String, CheckoutItem> _items = {};
-  bool _promoApplied = false;
-  OrderConfirmation? _lastOrder;
-
-  List<CheckoutItem> get items => List.unmodifiable(_items.values);
-  bool get promoApplied => _promoApplied;
-  OrderConfirmation? get lastOrder => _lastOrder;
-
-  int get totalQuantity =>
-      _items.values.fold<int>(0, (sum, item) => sum + item.quantity);
-
-  int get distinctCount => _items.length;
-
-  bool containsId(String id) => _items.containsKey(id);
-
-  /// Adds an item or increments its quantity if the exact key is already present.
-  void addItem(CheckoutItem item) {
-    final existing = _items[item.id];
-    if (existing != null) {
-      _items[item.id] = existing.copyWith(
-        quantity: existing.quantity + item.quantity,
-        size: item.size ?? existing.size,
-      );
-    } else {
-      _items[item.id] = item;
-    }
-    notifyListeners();
-  }
-
-  /// Replaces an item entry directly or inserts it if absent.
-  void upsertItem(CheckoutItem item) {
-    _items[item.id] = item;
-    notifyListeners();
-  }
-
-  /// Updates the quantity of an item; removes it when [quantity] <= 0.
-  void setQuantity(String id, int quantity) {
-    final existing = _items[id];
-    if (existing == null) return;
-    if (quantity <= 0) {
-      _items.remove(id);
-    } else {
-      _items[id] = existing.copyWith(quantity: quantity);
-    }
-    notifyListeners();
-  }
-
-  /// Removes a single item by its [id].
-  void removeItem(String id) {
-    if (_items.remove(id) != null) {
-      notifyListeners();
-    }
-  }
-
-  /// Removes any items whose ids match [predicate].
-  void removeWhere(bool Function(String id) predicate) {
-    final before = _items.length;
-    _items.removeWhere((key, _) => predicate(key));
-    if (_items.length != before) {
-      notifyListeners();
-    }
-  }
-
-  void setPromoApplied(bool value) {
-    if (_promoApplied == value) return;
-    _promoApplied = value;
-    notifyListeners();
-  }
-
-  void recordOrder(OrderConfirmation confirmation) {
-    _lastOrder = confirmation;
-    _items.clear();
-    notifyListeners();
-  }
-
-  void clear() {
-    if (_items.isEmpty && !_promoApplied && _lastOrder == null) return;
-    _items.clear();
-    _promoApplied = false;
-    _lastOrder = null;
-    notifyListeners();
-  }
-
-  void clearItemsOnly() {
-    if (_items.isEmpty) return;
-    _items.clear();
-    notifyListeners();
-  }
-}
+export '../commerce/checkout_pricing.dart';
+export '../commerce/shopping_bag_store.dart';
 
 /// Full-screen Checkout flow displaying bag products, delivery/coupon controls,
 /// itemized price breakdown, and dummy order submission.
@@ -435,18 +175,61 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Future<OrderConfirmation> _simulateDummyOrderRequest(
     Map<String, dynamic> payload,
     CheckoutPriceSummary summary,
+    List<CheckoutItem> items,
   ) async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
     final now = DateTime.now();
     final suffix = (now.millisecondsSinceEpoch % 900000) + 100000;
+    final orderId = 'ORD-$suffix';
+    const status = kDebugMode
+        ? '201 Created · Demo order accepted'
+        : 'Order confirmed';
+    const deliveryAddress = 'Satellite, Ahmedabad 380015';
+    const deliveryLabel = 'Home';
+    const estimatedDelivery = 'Express · 2-3 Days';
+
+    final orderItems = items
+        .map(
+          (item) => OrderItemInfo(
+            title: item.title,
+            brand: item.brand,
+            price: item.price,
+            lineTotal: item.lineTotal,
+            quantity: item.quantity,
+            size: item.size,
+            imageUrl: item.imageUrl,
+            imageColor: item.imageColor,
+          ),
+        )
+        .toList();
+
+    // Backend responds with the complete Server-Driven UI layout document
+    final sduiDoc = buildOrderConfirmationSduiDocument(
+      orderId: orderId,
+      status: status,
+      createdAt: now,
+      totalPayable: summary.totalPayable,
+      itemCount: summary.itemCount,
+      paymentMethod: _selectedPaymentMethod,
+      items: orderItems,
+      deliveryAddress: deliveryAddress,
+      deliveryLabel: deliveryLabel,
+      estimatedDelivery: estimatedDelivery,
+      requestPayload: payload,
+    );
+
     return OrderConfirmation(
-      orderId: 'ORD-$suffix',
-      status: '201 Created · Dummy request accepted',
+      orderId: orderId,
+      status: status,
       createdAt: now,
       requestPayload: payload,
       totalPayable: summary.totalPayable,
       itemCount: summary.itemCount,
       paymentMethod: _selectedPaymentMethod,
+      items: items,
+      deliveryAddress: deliveryAddress,
+      estimatedDelivery: estimatedDelivery,
+      sduiDocument: sduiDoc,
     );
   }
 
@@ -457,6 +240,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final summary = CheckoutPriceSummary.calculate(
       itemsSnapshot,
       promoApplied: _promoApplied,
+      paymentMethod: _selectedPaymentMethod,
     );
     final payload = _buildDummyOrderPayload(itemsSnapshot, summary);
 
@@ -465,7 +249,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     try {
       final confirmation = widget.onPlaceOrder != null
           ? await widget.onPlaceOrder!(payload)
-          : await _simulateDummyOrderRequest(payload, summary);
+          : await _simulateDummyOrderRequest(payload, summary, itemsSnapshot);
 
       if (!mounted) return;
       if (_usesSharedStore) {
@@ -495,6 +279,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final summary = CheckoutPriceSummary.calculate(
       items,
       promoApplied: _promoApplied,
+      paymentMethod: _selectedPaymentMethod,
     );
 
     return Scaffold(
@@ -551,7 +336,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ? _buildEmptyBagView()
               : _buildCheckoutBody(items, summary),
       bottomNavigationBar: _completedOrder != null
-          ? _buildConfirmationBottomBar()
+          ? _buildConfirmationBottomBar(_completedOrder!)
           : items.isNotEmpty
               ? _buildBottomOrderBar(summary)
               : null,
@@ -643,7 +428,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       children: [
         _buildDeliveryCard(),
         const SizedBox(height: 14),
-        _buildSectionHeading('Product Display (${summary.itemCount})'),
+        _buildSectionHeading('Items (${summary.itemCount})'),
         const SizedBox(height: 8),
         for (final item in items) ...[
           _buildProductItemCard(item),
@@ -907,14 +692,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
+  bool get _isCodSelected =>
+      _selectedPaymentMethod.toLowerCase().contains('cash on delivery');
+
   Widget _buildPromoCard() {
+    final prepaidOnly = _isCodSelected;
+    final switchOn = _promoApplied && !prepaidOnly;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _promoApplied ? _greenColor : _borderColor,
+          color: switchOn ? _greenColor : _borderColor,
         ),
       ),
       child: Row(
@@ -922,7 +712,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           Icon(
             Icons.local_offer_outlined,
             size: 18,
-            color: _promoApplied ? _greenColor : _accentColor,
+            color: switchOn
+                ? _greenColor
+                : (prepaidOnly ? _mutedColor : _accentColor),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -934,16 +726,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: _inkColor,
+                    color: prepaidOnly ? _mutedColor : _inkColor,
                   ),
                 ),
                 Text(
-                  _promoApplied
-                      ? 'Extra 10% instant discount applied'
-                      : 'Save an extra 10% on your order subtotal',
+                  prepaidOnly
+                      ? 'Prepaid only — switch to UPI/Card to use PREPAID10'
+                      : (switchOn
+                          ? 'Extra 10% instant discount applied'
+                          : 'Save an extra 10% on prepaid orders'),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
-                    color: _promoApplied ? _greenColor : _mutedColor,
+                    color: switchOn ? _greenColor : _mutedColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -951,9 +745,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
           Switch.adaptive(
-            value: _promoApplied,
+            value: switchOn,
             activeTrackColor: _greenColor,
-            onChanged: _isPlacingOrder ? null : _togglePromo,
+            onChanged: (_isPlacingOrder || prepaidOnly)
+                ? null
+                : _togglePromo,
           ),
         ],
       ),
@@ -1006,7 +802,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   showCheckmark: false,
                   onSelected: _isPlacingOrder
                       ? null
-                      : (_) => setState(() => _selectedPaymentMethod = method),
+                      : (_) {
+                          setState(() => _selectedPaymentMethod = method);
+                          // COD cannot use PREPAID10 — clear so UX matches pricing.
+                          if (method.toLowerCase().contains('cash on delivery') &&
+                              _promoApplied) {
+                            _togglePromo(false);
+                          }
+                        },
                 ),
             ],
           ),
@@ -1201,148 +1004,1133 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
+  late final DynamicLayoutBuilder _sduiBuilder = DynamicLayoutBuilder(
+    onAction: (action, props) {
+      if (action == 'continue_shopping' || action == 'navigate_back') {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      }
+    },
+  );
+
   Widget _buildOrderConfirmationView(OrderConfirmation order) {
-    final prettyPayload =
-        const JsonEncoder.withIndent('  ').convert(order.requestPayload);
+    final sdui = order.sduiDocument ??
+        buildOrderConfirmationSduiDocument(
+          orderId: order.orderId,
+          status: order.status,
+          createdAt: order.createdAt,
+          totalPayable: order.totalPayable,
+          itemCount: order.itemCount,
+          paymentMethod: order.paymentMethod,
+          items: _getOrderItems(order),
+          deliveryAddress: order.deliveryAddress,
+          deliveryLabel: (order.requestPayload['shippingAddress']
+                  as Map<String, dynamic>?)?['label']
+              ?.toString() ??
+              'Home',
+          estimatedDelivery: order.estimatedDelivery,
+          requestPayload: order.requestPayload,
+        );
 
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _borderColor),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEAF6EE),
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                child: const Icon(
-                  Icons.check_circle_rounded,
-                  size: 38,
-                  color: _greenColor,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                'Order Placed Successfully!',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  color: _inkColor,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Order ID: ${order.orderId}',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: _accentColor,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${order.itemCount} ${order.itemCount == 1 ? 'item' : 'items'} · Paid ${formatRupees(order.totalPayable)} via ${order.paymentMethod}',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13,
-                  color: _mutedColor,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: _bgColor,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _borderColor),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.cloud_done_outlined,
-                          size: 16,
-                          color: _greenColor,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            'Dummy Request Sent · ${order.status}',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w800,
-                              color: _greenColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    SelectableText(
-                      prettyPayload,
-                      style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 11,
-                        color: _inkColor,
-                        height: 1.35,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    final root = Map<String, dynamic>.from(sdui['root'] as Map);
+    return SingleChildScrollView(
+      child: _sduiBuilder.build(root),
+    );
+  }
+
+  Widget? _buildConfirmationBottomBar(OrderConfirmation order) {
+    final sdui = order.sduiDocument ??
+        buildOrderConfirmationSduiDocument(
+          orderId: order.orderId,
+          status: order.status,
+          createdAt: order.createdAt,
+          totalPayable: order.totalPayable,
+          itemCount: order.itemCount,
+          paymentMethod: order.paymentMethod,
+          items: _getOrderItems(order),
+          deliveryAddress: order.deliveryAddress,
+          deliveryLabel: (order.requestPayload['shippingAddress']
+                  as Map<String, dynamic>?)?['label']
+              ?.toString() ??
+              'Home',
+          estimatedDelivery: order.estimatedDelivery,
+          requestPayload: order.requestPayload,
+        );
+
+    final bottomBarRaw = sdui['bottomBar'];
+    if (bottomBarRaw is Map) {
+      return Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: _borderColor)),
+        ),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+        child: SafeArea(
+          top: false,
+          child: _sduiBuilder.build(Map<String, dynamic>.from(bottomBarRaw)),
+        ),
+      );
+    }
+    return null;
+  }
+
+  List<OrderItemInfo> _getOrderItems(OrderConfirmation order) {
+    if (order.items.isNotEmpty) {
+      return order.items
+          .map(
+            (item) => OrderItemInfo(
+              title: item.title,
+              brand: item.brand,
+              price: item.price,
+              lineTotal: item.lineTotal,
+              quantity: item.quantity,
+              size: item.size,
+              imageUrl: item.imageUrl,
+              imageColor: item.imageColor,
+            ),
+          )
+          .toList();
+    }
+
+    final rawItems = order.requestPayload['items'];
+    if (rawItems is List) {
+      return rawItems.map((raw) {
+        final map = raw is Map ? raw : const <String, dynamic>{};
+        final unitPrice = (map['unitPrice'] as num?)?.toInt() ?? 0;
+        final quantity = (map['quantity'] as num?)?.toInt() ?? 1;
+        final lineTotal =
+            (map['lineTotal'] as num?)?.toInt() ?? (unitPrice * quantity);
+        return OrderItemInfo(
+          title: map['title']?.toString() ?? 'Festive item',
+          brand: map['brand']?.toString() ?? '',
+          size: map['size']?.toString(),
+          quantity: quantity,
+          price: unitPrice,
+          lineTotal: lineTotal,
+        );
+      }).toList();
+    }
+
+    return const [];
+  }
+}
+
+String _formatOrderDate(DateTime dt) {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  final hour = dt.hour == 0 ? 12 : (dt.hour > 12 ? dt.hour - 12 : dt.hour);
+  final minute = dt.minute.toString().padLeft(2, '0');
+  final period = dt.hour >= 12 ? 'PM' : 'AM';
+  return '${dt.day} ${months[dt.month - 1]} ${dt.year}, $hour:$minute $period';
+}
+
+/// Generates the canonical backend Server-Driven UI (SDUI) layout document
+/// for the Order Confirmation screen.
+Map<String, dynamic> buildOrderConfirmationSduiDocument({
+  required String orderId,
+  required String status,
+  required DateTime createdAt,
+  required int totalPayable,
+  required int itemCount,
+  required String paymentMethod,
+  required List<OrderItemInfo> items,
+  required String deliveryAddress,
+  required String deliveryLabel,
+  required String estimatedDelivery,
+  required Map<String, dynamic> requestPayload,
+}) {
+  final prettyPayload =
+      const JsonEncoder.withIndent('  ').convert(requestPayload);
+  final formattedDate = _formatOrderDate(createdAt);
+
+  final pricing = requestPayload['pricing'] as Map<String, dynamic>?;
+  final totalMrp = (pricing?['totalMrp'] as num?)?.toInt();
+  final mrpDiscount = (pricing?['mrpDiscount'] as num?)?.toInt() ?? 0;
+  final promoDiscount = (pricing?['promoDiscount'] as num?)?.toInt() ?? 0;
+  final deliveryFee = (pricing?['deliveryFee'] as num?)?.toInt() ?? 0;
+  final promoCode = requestPayload['promoCode'] as String?;
+  final totalSavings = mrpDiscount + promoDiscount;
+
+  final itemsChildren = <Map<String, dynamic>>[];
+  for (var i = 0; i < items.length; i++) {
+    if (i > 0) {
+      itemsChildren.add({
+        'type': 'divider',
+        'props': {'height': 1.0, 'color': '#E5DFD3'},
+      });
+    }
+    final item = items[i];
+    itemsChildren.add({
+      'type': 'row',
+      'props': {
+        'crossAxisAlignment': 'start',
+        'gap': 12.0,
+      },
+      'children': [
+        if (item.imageUrl != null && item.imageUrl!.isNotEmpty)
+          {
+            'type': 'image',
+            'props': {
+              'url': item.imageUrl,
+              'width': 50.0,
+              'height': 60.0,
+              'radius': 8.0,
+              'fit': 'cover',
+            },
+          }
+        else
+          {
+            'type': 'container',
+            'props': {
+              'width': 50.0,
+              'height': 60.0,
+              'radius': 8.0,
+              'color': '#E9E3D7',
+              'alignment': 'center',
+            },
+            'children': [
+              {
+                'type': 'icon',
+                'props': {
+                  'name': 'shopping_bag',
+                  'size': 24.0,
+                  'color': '#5A554C',
+                },
+              },
             ],
-          ),
-        ),
+          },
+        {
+          'type': 'expanded',
+          'children': [
+            {
+              'type': 'column',
+              'props': {
+                'crossAxisAlignment': 'start',
+                'gap': 4.0,
+              },
+              'children': [
+                if (item.brand.isNotEmpty)
+                  {
+                    'type': 'text',
+                    'props': {
+                      'value': item.brand,
+                      'fontSize': 10.0,
+                      'bold': true,
+                      'color': '#5A554C',
+                    },
+                  },
+                {
+                  'type': 'text',
+                  'props': {
+                    'value': item.title,
+                    'fontSize': 13.0,
+                    'bold': true,
+                    'color': '#14120F',
+                    'maxLines': 2,
+                    'overflow': 'ellipsis',
+                  },
+                },
+                {
+                  'type': 'row',
+                  'props': {
+                    'gap': 8.0,
+                    'crossAxisAlignment': 'center',
+                  },
+                  'children': [
+                    if (item.size != null)
+                      {
+                        'type': 'container',
+                        'props': {
+                          'color': '#F3EFE6',
+                          'radius': 4.0,
+                          'padding': {
+                            'left': 6,
+                            'right': 6,
+                            'top': 2,
+                            'bottom': 2,
+                          },
+                        },
+                        'children': [
+                          {
+                            'type': 'text',
+                            'props': {
+                              'value': 'Size ${item.size}',
+                              'fontSize': 10.0,
+                              'bold': true,
+                              'color': '#14120F',
+                            },
+                          },
+                        ],
+                      },
+                    {
+                      'type': 'text',
+                      'props': {
+                        'value': 'Qty: ${item.quantity}',
+                        'fontSize': 11.0,
+                        'color': '#5A554C',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          'type': 'text',
+          'props': {
+            'value': formatRupees(item.lineTotal),
+            'fontSize': 13.0,
+            'bold': true,
+            'color': '#14120F',
+          },
+        },
       ],
-    );
+    });
   }
 
-  Widget _buildConfirmationBottomBar() {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: _borderColor)),
-      ),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _inkColor,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Continue Shopping',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+  final pricingChildren = <Map<String, dynamic>>[
+    {
+      'type': 'row',
+      'props': {
+        'crossAxisAlignment': 'center',
+        'gap': 10.0,
+      },
+      'children': [
+        {
+          'type': 'container',
+          'props': {
+            'width': 36.0,
+            'height': 36.0,
+            'color': '#EAF6EE',
+            'radius': 10.0,
+            'alignment': 'center',
+          },
+          'children': [
+            {
+              'type': 'icon',
+              'props': {
+                'name': 'check_outline',
+                'size': 20.0,
+                'color': '#1B7A3A',
+              },
+            },
+          ],
+        },
+        {
+          'type': 'column',
+          'props': {
+            'crossAxisAlignment': 'start',
+            'gap': 2.0,
+          },
+          'children': [
+            {
+              'type': 'text',
+              'props': {
+                'value': 'Payment Summary',
+                'fontSize': 13.0,
+                'bold': true,
+                'color': '#14120F',
+              },
+            },
+            {
+              'type': 'text',
+              'props': {
+                'value': 'Paid via $paymentMethod',
+                'fontSize': 11.0,
+                'bold': true,
+                'color': '#1B7A3A',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      'type': 'divider',
+      'props': {'height': 1.0, 'color': '#E5DFD3'},
+    },
+  ];
+
+  if (totalMrp != null && totalMrp > 0) {
+    pricingChildren.addAll([
+      {
+        'type': 'row',
+        'props': {'mainAxisAlignment': 'spaceBetween'},
+        'children': [
+          {
+            'type': 'text',
+            'props': {
+              'value': 'Total MRP',
+              'fontSize': 13.0,
+              'color': '#5A554C',
+            },
+          },
+          {
+            'type': 'text',
+            'props': {
+              'value': formatRupees(totalMrp),
+              'fontSize': 13.0,
+              'bold': true,
+              'color': '#14120F',
+            },
+          },
+        ],
+      },
+      if (mrpDiscount > 0)
+        {
+          'type': 'row',
+          'props': {'mainAxisAlignment': 'spaceBetween'},
+          'children': [
+            {
+              'type': 'text',
+              'props': {
+                'value': 'Discount on MRP',
+                'fontSize': 13.0,
+                'color': '#5A554C',
+              },
+            },
+            {
+              'type': 'text',
+              'props': {
+                'value': '-${formatRupees(mrpDiscount)}',
+                'fontSize': 13.0,
+                'bold': true,
+                'color': '#1B7A3A',
+              },
+            },
+          ],
+        },
+      if (promoDiscount > 0)
+        {
+          'type': 'row',
+          'props': {'mainAxisAlignment': 'spaceBetween'},
+          'children': [
+            {
+              'type': 'text',
+              'props': {
+                'value': 'Coupon (${promoCode ?? "Promo"})',
+                'fontSize': 13.0,
+                'color': '#5A554C',
+              },
+            },
+            {
+              'type': 'text',
+              'props': {
+                'value': '-${formatRupees(promoDiscount)}',
+                'fontSize': 13.0,
+                'bold': true,
+                'color': '#1B7A3A',
+              },
+            },
+          ],
+        },
+      {
+        'type': 'row',
+        'props': {'mainAxisAlignment': 'spaceBetween'},
+        'children': [
+          {
+            'type': 'text',
+            'props': {
+              'value': 'Delivery Fee',
+              'fontSize': 13.0,
+              'color': '#5A554C',
+            },
+          },
+          {
+            'type': 'text',
+            'props': {
+              'value': deliveryFee == 0 ? 'FREE' : formatRupees(deliveryFee),
+              'fontSize': 13.0,
+              'bold': true,
+              'color': deliveryFee == 0 ? '#1B7A3A' : '#14120F',
+            },
+          },
+        ],
+      },
+      {
+        'type': 'divider',
+        'props': {'height': 1.0, 'color': '#E5DFD3'},
+      },
+    ]);
   }
+
+  pricingChildren.add({
+    'type': 'row',
+    'props': {'mainAxisAlignment': 'spaceBetween'},
+    'children': [
+      {
+        'type': 'text',
+        'props': {
+          'value': 'Total Paid',
+          'fontSize': 15.0,
+          'bold': true,
+          'color': '#14120F',
+        },
+      },
+      {
+        'type': 'text',
+        'props': {
+          'value': formatRupees(totalPayable),
+          'fontSize': 17.0,
+          'bold': true,
+          'color': '#C8321A',
+        },
+      },
+    ],
+  });
+
+  if (totalSavings > 0) {
+    pricingChildren.add({
+      'type': 'container',
+      'props': {
+        'color': '#EAF6EE',
+        'radius': 10.0,
+        'padding': {'left': 12, 'right': 12, 'top': 8, 'bottom': 8},
+      },
+      'children': [
+        {
+          'type': 'row',
+          'props': {'gap': 8.0, 'crossAxisAlignment': 'center'},
+          'children': [
+            {
+              'type': 'icon',
+              'props': {'name': 'savings', 'size': 16.0, 'color': '#1B7A3A'},
+            },
+            {
+              'type': 'expanded',
+              'children': [
+                {
+                  'type': 'text',
+                  'props': {
+                    'value':
+                        'You saved ${formatRupees(totalSavings)} on this order!',
+                    'fontSize': 12.0,
+                    'bold': true,
+                    'color': '#1B7A3A',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  }
+
+  return {
+    'id': 'order_confirmation',
+    'title': 'Order Confirmed',
+    'background': '#F7F5F0',
+    'showAppBar': true,
+    'bottomBar': {
+      'type': 'button',
+      'props': {
+        'label': 'Continue Shopping',
+        'action': 'continue_shopping',
+        'fullWidth': true,
+        'backgroundColor': '#14120F',
+        'textColor': '#FFFFFF',
+        'radius': 12.0,
+        'fontSize': 14.0,
+        'bold': true,
+      },
+    },
+    'root': {
+      'type': 'column',
+      'props': {
+        'scroll': true,
+        'gap': 14.0,
+        'crossAxisAlignment': 'stretch',
+        'padding': {'left': 16, 'right': 16, 'top': 16, 'bottom': 32},
+      },
+      'children': [
+        // 1. Hero Card
+        {
+          'type': 'container',
+          'props': {
+            'color': '#FFFFFF',
+            'radius': 20.0,
+            'borderColor': '#E5DFD3',
+            'padding': {'left': 20, 'right': 20, 'top': 20, 'bottom': 20},
+          },
+          'children': [
+            {
+              'type': 'column',
+              'props': {'gap': 10.0, 'crossAxisAlignment': 'center'},
+              'children': [
+                {
+                  'type': 'container',
+                  'props': {
+                    'width': 64.0,
+                    'height': 64.0,
+                    'color': '#EAF6EE',
+                    'shape': 'circle',
+                    'borderColor': '#1B7A3A',
+                    'alignment': 'center',
+                  },
+                  'children': [
+                    {
+                      'type': 'icon',
+                      'props': {
+                        'name': 'check_circle',
+                        'size': 38.0,
+                        'color': '#1B7A3A',
+                      },
+                    },
+                  ],
+                },
+                {
+                  'type': 'text',
+                  'props': {
+                    'value': 'Order Placed Successfully!',
+                    'fontSize': 20.0,
+                    'bold': true,
+                    'color': '#14120F',
+                    'align': 'center',
+                  },
+                },
+                {
+                  'type': 'text',
+                  'props': {
+                    'value':
+                        'Thank you for your order! We are preparing your items for delivery.',
+                    'fontSize': 13.0,
+                    'color': '#5A554C',
+                    'align': 'center',
+                  },
+                },
+                {
+                  'type': 'container',
+                  'props': {
+                    'color': '#F7F5F0',
+                    'radius': 10.0,
+                    'borderColor': '#E5DFD3',
+                    'padding': {
+                      'left': 14,
+                      'right': 14,
+                      'top': 8,
+                      'bottom': 8,
+                    },
+                    'action': 'copy_order_id',
+                    'orderId': orderId,
+                  },
+                  'children': [
+                    {
+                      'type': 'row',
+                      'props': {'gap': 8.0, 'crossAxisAlignment': 'center'},
+                      'children': [
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Order ID: ',
+                            'fontSize': 12.0,
+                            'color': '#5A554C',
+                          },
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': orderId,
+                            'fontSize': 13.0,
+                            'bold': true,
+                            'color': '#C8321A',
+                          },
+                        },
+                        {
+                          'type': 'icon',
+                          'props': {
+                            'name': 'copy',
+                            'size': 14.0,
+                            'color': '#5A554C',
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  'type': 'text',
+                  'props': {
+                    'value': 'Placed on $formattedDate',
+                    'fontSize': 11.0,
+                    'color': '#5A554C',
+                    'align': 'center',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+
+        // 2. Delivery Details Card
+        {
+          'type': 'container',
+          'props': {
+            'color': '#FFFFFF',
+            'radius': 16.0,
+            'borderColor': '#E5DFD3',
+            'padding': {'left': 16, 'right': 16, 'top': 16, 'bottom': 16},
+          },
+          'children': [
+            {
+              'type': 'column',
+              'props': {'gap': 12.0, 'crossAxisAlignment': 'stretch'},
+              'children': [
+                {
+                  'type': 'row',
+                  'props': {'gap': 10.0, 'crossAxisAlignment': 'center'},
+                  'children': [
+                    {
+                      'type': 'container',
+                      'props': {
+                        'width': 36.0,
+                        'height': 36.0,
+                        'color': '#FFF1ED',
+                        'radius': 10.0,
+                        'alignment': 'center',
+                      },
+                      'children': [
+                        {
+                          'type': 'icon',
+                          'props': {
+                            'name': 'local_shipping',
+                            'size': 20.0,
+                            'color': '#C8321A',
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      'type': 'column',
+                      'props': {'gap': 2.0, 'crossAxisAlignment': 'start'},
+                      'children': [
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Delivery Details',
+                            'fontSize': 13.0,
+                            'bold': true,
+                            'color': '#14120F',
+                          },
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': estimatedDelivery,
+                            'fontSize': 11.0,
+                            'bold': true,
+                            'color': '#1B7A3A',
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  'type': 'container',
+                  'props': {
+                    'color': '#F7F5F0',
+                    'radius': 12.0,
+                    'borderColor': '#E5DFD3',
+                    'padding': {
+                      'left': 12,
+                      'right': 12,
+                      'top': 12,
+                      'bottom': 12,
+                    },
+                  },
+                  'children': [
+                    {
+                      'type': 'row',
+                      'props': {'gap': 8.0, 'crossAxisAlignment': 'start'},
+                      'children': [
+                        {
+                          'type': 'icon',
+                          'props': {
+                            'name': 'location_on',
+                            'size': 16.0,
+                            'color': '#5A554C',
+                          },
+                        },
+                        {
+                          'type': 'column',
+                          'props': {'gap': 2.0, 'crossAxisAlignment': 'start'},
+                          'children': [
+                            {
+                              'type': 'text',
+                              'props': {
+                                'value': 'Delivering to $deliveryLabel',
+                                'fontSize': 12.0,
+                                'bold': true,
+                                'color': '#14120F',
+                              },
+                            },
+                            {
+                              'type': 'text',
+                              'props': {
+                                'value': deliveryAddress,
+                                'fontSize': 12.0,
+                                'color': '#5A554C',
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                // Tracker Progress
+                {
+                  'type': 'row',
+                  'props': {'crossAxisAlignment': 'center'},
+                  'children': [
+                    {
+                      'type': 'column',
+                      'props': {'crossAxisAlignment': 'center', 'gap': 4.0},
+                      'children': [
+                        {
+                          'type': 'container',
+                          'props': {
+                            'width': 24.0,
+                            'height': 24.0,
+                            'color': '#1B7A3A',
+                            'shape': 'circle',
+                            'alignment': 'center',
+                          },
+                          'children': [
+                            {
+                              'type': 'icon',
+                              'props': {
+                                'name': 'check',
+                                'size': 14.0,
+                                'color': '#FFFFFF',
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Confirmed',
+                            'fontSize': 11.0,
+                            'bold': true,
+                            'color': '#14120F',
+                          },
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Order Placed',
+                            'fontSize': 9.0,
+                            'bold': true,
+                            'color': '#1B7A3A',
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      'type': 'expanded',
+                      'children': [
+                        {
+                          'type': 'container',
+                          'props': {'height': 2.0, 'color': '#1B7A3A'},
+                        },
+                      ],
+                    },
+                    {
+                      'type': 'column',
+                      'props': {'crossAxisAlignment': 'center', 'gap': 4.0},
+                      'children': [
+                        {
+                          'type': 'container',
+                          'props': {
+                            'width': 24.0,
+                            'height': 24.0,
+                            'color': '#FFF1ED',
+                            'shape': 'circle',
+                            'borderColor': '#C8321A',
+                            'borderWidth': 2.0,
+                            'alignment': 'center',
+                          },
+                          'children': [
+                            {
+                              'type': 'container',
+                              'props': {
+                                'width': 8.0,
+                                'height': 8.0,
+                                'color': '#C8321A',
+                                'shape': 'circle',
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Preparing',
+                            'fontSize': 11.0,
+                            'bold': true,
+                            'color': '#14120F',
+                          },
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Packing',
+                            'fontSize': 9.0,
+                            'bold': true,
+                            'color': '#C8321A',
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      'type': 'expanded',
+                      'children': [
+                        {
+                          'type': 'container',
+                          'props': {'height': 2.0, 'color': '#E5DFD3'},
+                        },
+                      ],
+                    },
+                    {
+                      'type': 'column',
+                      'props': {'crossAxisAlignment': 'center', 'gap': 4.0},
+                      'children': [
+                        {
+                          'type': 'container',
+                          'props': {
+                            'width': 24.0,
+                            'height': 24.0,
+                            'color': '#F7F5F0',
+                            'shape': 'circle',
+                            'borderColor': '#E5DFD3',
+                            'borderWidth': 2.0,
+                          },
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': 'Delivered',
+                            'fontSize': 11.0,
+                            'color': '#5A554C',
+                          },
+                        },
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value': '2-3 Days',
+                            'fontSize': 9.0,
+                            'color': '#5A554C',
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+
+        // 3. Items Ordered Card
+        {
+          'type': 'container',
+          'props': {
+            'color': '#FFFFFF',
+            'radius': 16.0,
+            'borderColor': '#E5DFD3',
+            'padding': {'left': 16, 'right': 16, 'top': 16, 'bottom': 16},
+          },
+          'children': [
+            {
+              'type': 'column',
+              'props': {'gap': 12.0, 'crossAxisAlignment': 'stretch'},
+              'children': [
+                {
+                  'type': 'row',
+                  'props': {
+                    'mainAxisAlignment': 'spaceBetween',
+                    'crossAxisAlignment': 'center',
+                  },
+                  'children': [
+                    {
+                      'type': 'text',
+                      'props': {
+                        'value': 'Items in this Order',
+                        'fontSize': 13.0,
+                        'bold': true,
+                        'color': '#14120F',
+                      },
+                    },
+                    {
+                      'type': 'container',
+                      'props': {
+                        'color': '#F3EFE6',
+                        'radius': 6.0,
+                        'padding': {
+                          'left': 8,
+                          'right': 8,
+                          'top': 2,
+                          'bottom': 2,
+                        },
+                      },
+                      'children': [
+                        {
+                          'type': 'text',
+                          'props': {
+                            'value':
+                                '$itemCount ${itemCount == 1 ? "item" : "items"}',
+                            'fontSize': 11.0,
+                            'bold': true,
+                            'color': '#14120F',
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                ...itemsChildren,
+              ],
+            },
+          ],
+        },
+
+        // 4. Payment & Price Summary
+        {
+          'type': 'container',
+          'props': {
+            'color': '#FFFFFF',
+            'radius': 16.0,
+            'borderColor': '#E5DFD3',
+            'padding': {'left': 16, 'right': 16, 'top': 16, 'bottom': 16},
+          },
+          'children': [
+            {
+              'type': 'column',
+              'props': {'gap': 10.0, 'crossAxisAlignment': 'stretch'},
+              'children': pricingChildren,
+            },
+          ],
+        },
+
+        // 5. Order Updates
+        {
+          'type': 'container',
+          'props': {
+            'color': '#FFFFFF',
+            'radius': 16.0,
+            'borderColor': '#E5DFD3',
+            'padding': {'left': 14, 'right': 14, 'top': 14, 'bottom': 14},
+          },
+          'children': [
+            {
+              'type': 'row',
+              'props': {'gap': 12.0, 'crossAxisAlignment': 'center'},
+              'children': [
+                {
+                  'type': 'container',
+                  'props': {
+                    'width': 36.0,
+                    'height': 36.0,
+                    'color': '#F3EFE6',
+                    'radius': 10.0,
+                    'alignment': 'center',
+                  },
+                  'children': [
+                    {
+                      'type': 'icon',
+                      'props': {
+                        'name': 'email',
+                        'size': 20.0,
+                        'color': '#14120F',
+                      },
+                    },
+                  ],
+                },
+                {
+                  'type': 'column',
+                  'props': {'gap': 2.0, 'crossAxisAlignment': 'start'},
+                  'children': [
+                    {
+                      'type': 'text',
+                      'props': {
+                        'value': 'Order Updates',
+                        'fontSize': 12.0,
+                        'bold': true,
+                        'color': '#14120F',
+                      },
+                    },
+                    {
+                      'type': 'text',
+                      'props': {
+                        'value':
+                            'You will receive order updates on SMS & WhatsApp.',
+                        'fontSize': 11.0,
+                        'color': '#5A554C',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+
+        if (kDebugMode)
+          {
+            'type': 'expansion_tile',
+            'props': {
+              'title': 'View API Request Details',
+              'subtitle': 'Debug only · $status · /api/v1/orders',
+              'icon': 'terminal',
+              'initiallyExpanded': false,
+            },
+            'children': [
+              {
+                'type': 'container',
+                'props': {
+                  'color': '#F7F5F0',
+                  'radius': 10.0,
+                  'borderColor': '#E5DFD3',
+                  'padding': {
+                    'left': 12,
+                    'right': 12,
+                    'top': 12,
+                    'bottom': 12,
+                  },
+                },
+                'children': [
+                  {
+                    'type': 'selectable_text',
+                    'props': {
+                      'value': prettyPayload,
+                      'monospace': true,
+                      'fontSize': 10.0,
+                      'color': '#14120F',
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+      ],
+    },
+  };
 }
 
 class _StepperButton extends StatelessWidget {

@@ -1,55 +1,67 @@
 # Festival SDUI (Flutter + Firebase)
 
-Server-driven UI learning app. Home opens **Diwali** first. Change `config/active.festivalId` in Firestore to `navratri` / `holi` — the UI updates live via streams (no restart).
+Server-driven festival shopping UI. Home listens to Firestore `config/active.festivalId`, then streams `screens/{festivalId}` and builds the layout from a nested JSON `root` tree — no app restart.
 
-## Run (offline seeds)
+## Run
 
 ```bash
 flutter pub get
 flutter run
 ```
 
-Without Firebase, home loads Diwali from `assets/sdui/diwali.json` (`Offline · diwali`).
+Without Firebase, the app loads the matching seed from `assets/sdui/{id}.json` (`Offline · {id}`).
 
 ## Wire Firebase (`sdui-learning`)
 
 See [docs/firebase_setup.md](docs/firebase_setup.md).
 
 1. `flutterfire configure --project=sdui-learning`
-2. Seed `screens/{navratri|diwali|holi}`
-3. Create `config/active` with `festivalId: "diwali"`
-4. Change `festivalId` to `navratri` → home swaps live
+2. Seed `screens/{diwali|navratri|holi|uttarayan}` (include `schemaVersion: 1`)
+3. Create `config/active` with `{ "festivalId": "diwali" }`
+4. Change `festivalId` → home swaps live
 
 ## Architecture
 
 ```
-lib/
-  main.dart                 # Firebase init + architecture switch
-  architecture_picker_page.dart
-  shared/
-    sdui/layout/            # model-free recursive builder (column/row/grid/…)
-    data/                   # ScreenRepository + LayoutRepository
-  riverpod/                 # typed festival SDUI
-  bloc/                     # typed festival SDUI
+lib/main.dart
+  → FestivalApp
+    → DynamicLayoutPage
+      → LayoutRepository.watchActive()   # config/active → screens/{id}
+      → DynamicLayoutBuilder             # map catalog (parts: primitives / commerce / festival)
+      → SduiActionRouter + SduiAnalytics # typed actions (no silent fallthrough)
 ```
 
-In [`lib/main.dart`](lib/main.dart):
+| Path | Role |
+|------|------|
+| `lib/shared/data/repositories/layout_repository.dart` | Firestore + seed fallback + schema gate |
+| `lib/shared/sdui/layout/dynamic_layout_builder.dart` | Thin registry + `build()` |
+| `lib/shared/sdui/layout/sdui_*.dart` | Domain widget factories (part files) |
+| `lib/shared/sdui/actions/sdui_action_router.dart` | Action → navigation |
+| `lib/shared/commerce/` | `ShoppingBagStore` + checkout pricing |
+| `lib/shared/ui/category_listing_page.dart` | **Native island** (Kurtas listing, not SDUI) |
 
-```dart
-const kArchitecture = AppArchitecture.picker;
-// or .riverpod / .bloc / .dynamicLayout
-```
+| Firestore | Role |
+|-----------|------|
+| `config/active` | `{ festivalId }` which screen to show |
+| `screens/{id}` | Full SDUI document (`root`, optional `components`, `theme`, `schemaVersion`) |
 
-### Dynamic layout (no Dart models)
+Schema reference: [docs/sdui_schema.md](docs/sdui_schema.md).
 
-- Doc: `screens/layout_demo` (nested `root` tree)
-- Seeds: `assets/sdui/layout_demo.json` (column+row) and `layout_demo_grid.json` (grid)
-- Change tree in Firestore → UI updates live (e.g. replace `row` with `grid`)
+CI: `.github/workflows/flutter_ci.yml` runs `flutter analyze` + `flutter test`.
 
-### Typed festivals (Riverpod / BLoC)
+## Interview demo
 
-Both call `ScreenRepository.watchActiveScreen()`.
+1. Open app → Live festival from `config/active`
+2. Change `festivalId` in Firebase Console → UI swaps
+3. Edit a product title/price on `screens/diwali` → updates without client overwrite
+4. Tap category / See all / Add to bag / Checkout
+5. Toggle airplane mode → Offline seed or Retry
 
-- `config/active` — which festival is shown (`festivalId`)
-- `screens/{id}` — full SDUI JSON for each festival
-- Supported sections: `hero`, `ritual_list`, `offer_strip`, `cta`
+## Notes
+
+- Diwali category/price chips only mutate **selected / visible** flags on the server tree; they do not replace sections with hardcoded Dart catalogs.
+- See all / search use **only** products extracted from the live SDUI tree (empty → empty state). No hardcoded Diwali catalog fallback.
+- Category listing remains a documented **native island** (static Kurtas catalog) for interview honesty.
+- Checkout order placement is a local demo simulation (debug payload visible only in debug builds).
+- Cart is in-memory for the session (`ShoppingBagStore`).
+- PREPAID10 applies on prepaid methods only; COD disables the coupon switch.

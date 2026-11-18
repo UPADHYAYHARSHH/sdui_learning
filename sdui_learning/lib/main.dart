@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
 import 'shared/data/repositories/layout_repository.dart';
@@ -43,11 +42,12 @@ class FestivalApp extends StatelessWidget {
     return MaterialApp(
       title: 'Festival Shopping',
       debugShowCheckedModeBanner: false,
+      // Typography is applied by SDUI widgets (GoogleFonts). Avoid eager
+      // TextTheme font fetches here — they break offline widget tests.
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
         scaffoldBackgroundColor: const Color(0xFFF7F5F0),
-        textTheme: GoogleFonts.plusJakartaSansTextTheme(),
       ),
       home: DynamicLayoutPage(
         repository: layoutRepository,
@@ -57,8 +57,3 @@ class FestivalApp extends StatelessWidget {
   }
 }
 
-/// Backwards compatibility aliases
-typedef HoliApp = FestivalApp;
-typedef UttarayanApp = FestivalApp;
-typedef NavratriApp = FestivalApp;
-typedef DiwaliApp = FestivalApp;

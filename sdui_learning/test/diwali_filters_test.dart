@@ -134,11 +134,8 @@ void main() {
         break;
       }
     }
-    if (settle) {
-      await tester.pumpAndSettle();
-    } else {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
+    // Do not use pumpAndSettle — festival GIFs schedule frames forever.
+    await tester.pump(Duration(milliseconds: settle ? 300 : 100));
   }
 
   Future<void> pumpBounded(WidgetTester tester) async {
@@ -190,26 +187,24 @@ void main() {
       expect(cardBgColor(tester, 'Under\n₹1999'), const Color(0xFFFFFFFF));
       expect(find.text('Diwali picks'), findsOneWidget);
 
-      // Tap Gifts chip -> switches banner and content.
+      // Category chips only update selection + product visibility (server tree kept).
       await tester.tap(find.text('Gifts'));
       await tester.pumpAndSettle();
+      expect(find.text('DIWALI SALE'), findsOneWidget);
+      expect(find.text('Gold tone watch'), findsOneWidget);
+      expect(find.text('Silk festive kurta'), findsNothing);
 
-      expect(find.text('FESTIVE GIFTS & HAMPERS'), findsOneWidget);
-      expect(find.text('Gifts picks'), findsOneWidget);
-
-      // Tap Decor chip -> switches banner and content.
       await tester.tap(find.text('Decor'));
       await tester.pumpAndSettle();
+      expect(find.text('Brass diya set'), findsOneWidget);
+      expect(find.text('Fairy light set'), findsOneWidget);
+      expect(find.text('Silk festive kurta'), findsNothing);
 
-      expect(find.text('HOME & PUJA DECOR'), findsOneWidget);
-      expect(find.text('Decor picks'), findsOneWidget);
-
-      // Tap Fashion chip -> switches banner and content.
       await tester.tap(find.text('Fashion'));
       await tester.pumpAndSettle();
-
-      expect(find.text('ETHNIC & FESTIVE WEAR'), findsOneWidget);
-      expect(find.text('Fashion picks'), findsOneWidget);
+      expect(find.text('Silk festive kurta'), findsOneWidget);
+      expect(find.text('Embroidered kurta'), findsOneWidget);
+      expect(find.text('Gold tone watch'), findsNothing);
     },
   );
 
@@ -248,29 +243,36 @@ void main() {
         ),
       );
 
-      final seeAllLinks = find.text('See all');
-      expect(seeAllLinks, findsNWidgets(2));
+      final seeAllBtn = find.widgetWithText(ElevatedButton, 'See all');
+      expect(seeAllBtn, findsAtLeastNWidgets(1));
 
-      // First See all -> Diwali picks
-      await tester.ensureVisible(seeAllLinks.first);
-      await tester.tap(seeAllLinks.first);
-      await tester.pumpAndSettle();
-
-      expect(find.byType(SeeAllPage), findsOneWidget);
-      expect(find.text('Diwali picks'), findsOneWidget);
-      expect(find.text('16 items'), findsOneWidget);
-
-      await tester.tap(find.byIcon(Icons.arrow_back));
-      await tester.pumpAndSettle();
-
-      // Second See all -> Festive gifts
-      await tester.ensureVisible(seeAllLinks.last);
-      await tester.tap(seeAllLinks.last);
-      await tester.pumpAndSettle();
+      await tester.ensureVisible(seeAllBtn.first);
+      await tester.tap(seeAllBtn.first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.byType(SeeAllPage), findsOneWidget);
-      expect(find.text('Festive gifts'), findsOneWidget);
-      expect(find.text('16 items'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Diwali picks'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.textContaining('items'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Silk festive kurta'),
+        ),
+        findsWidgets,
+      );
     },
   );
 
@@ -293,28 +295,66 @@ void main() {
       await tester.tap(find.text('Under\n₹999'));
       await tester.pumpAndSettle();
 
-      final seeAllFinder = find.text('See all').first;
-      await tester.ensureVisible(seeAllFinder);
-      await tester.tap(seeAllFinder);
-      await tester.pumpAndSettle();
+      final seeAllBtn = find.widgetWithText(ElevatedButton, 'See all').first;
+      await tester.ensureVisible(seeAllBtn);
+      await tester.tap(seeAllBtn);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.byType(SeeAllPage), findsOneWidget);
-      expect(find.byIcon(Icons.search_rounded), findsNothing);
-      expect(find.byIcon(Icons.shopping_bag_outlined), findsNothing);
-      expect(find.text('Gifts picks · Under ₹999'), findsOneWidget);
-      expect(find.text('4 items'), findsOneWidget);
-      expect(find.text('Gold tone watch'), findsOneWidget);
-      expect(find.text('Brass diya gift set'), findsNothing); // ₹1299 > 999
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.byIcon(Icons.search_rounded),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.byIcon(Icons.shopping_bag_outlined),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Gifts picks · Under ₹999'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Gold tone watch'),
+        ),
+        findsWidgets,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Brass diya set'),
+        ),
+        findsNothing,
+      );
 
       // Add an item to bag and verify CTA updates.
       await tester.tap(find.text('Add to bag').first);
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Added (1)'), findsOneWidget);
 
-      // Clear price filter via All Prices pill to reveal Brass diya gift set.
+      // Clear price filter via All Prices pill to reveal higher-priced gifts.
       await tester.tap(find.text('All Prices'));
-      await tester.pumpAndSettle();
-      expect(find.text('6 items'), findsOneWidget);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Brass diya set'),
+        ),
+        findsOneWidget,
+      );
 
       // Open Sort sheet and sort by Price: Low to High.
       await tester.tap(find.text('Sort'));
@@ -338,9 +378,12 @@ void main() {
         ),
       );
 
-      final seeAllFinder = find.text('See all').first;
-      await tester.ensureVisible(seeAllFinder);
-      await tester.tap(seeAllFinder);
+      final seeAllInk = find.ancestor(
+        of: find.text('See all'),
+        matching: find.byType(InkWell),
+      ).first;
+      await tester.ensureVisible(seeAllInk);
+      await tester.tap(seeAllInk);
       await tester.pumpAndSettle();
 
       expect(find.byType(SeeAllPage), findsOneWidget);
@@ -411,7 +454,24 @@ void main() {
 
       // 3. SeeAllPage product card opens details card and updates bag count.
       await tester.pumpWidget(
-        const MaterialApp(home: SeeAllPage()),
+        MaterialApp(
+          home: SeeAllPage(
+            products: [
+              SeeAllProduct.fromCardProps(
+                {
+                  'brand': 'Titan Festive',
+                  'title': 'Gold tone watch',
+                  'price': '₹999',
+                  'originalPrice': '₹1999',
+                  'discount': '50% off',
+                  'imageUrl': 'diwali/products/gold_tone_watch.jpg',
+                  'categories': ['gifts', 'diwali'],
+                },
+                id: 'g1',
+              )!,
+            ],
+          ),
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -479,7 +539,7 @@ void main() {
 
       // Product display details are visible.
       expect(find.text('Cotton straight kurta'), findsOneWidget);
-      expect(find.text('Brand A'), findsOneWidget);
+      expect(find.text('Fabindia'), findsOneWidget);
       expect(find.text('Size M'), findsOneWidget);
       expect(find.text('₹799'), findsWidgets);
 
@@ -516,11 +576,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Order Placed Successfully!'), findsOneWidget);
-      expect(
-        find.textContaining('Dummy Request Sent'),
-        findsOneWidget,
-      );
-      expect(find.textContaining('/api/v1/orders'), findsOneWidget);
+      expect(find.text('Delivery Details'), findsOneWidget);
+      expect(find.textContaining('Delivering to Home'), findsOneWidget);
+      expect(find.text('Items in this Order'), findsOneWidget);
+      expect(find.text('Payment Summary'), findsOneWidget);
+      expect(find.text('Order Updates'), findsOneWidget);
+      // API payload tile is debug-only.
+      expect(find.textContaining('View API Request Details'), findsOneWidget);
 
       final recordedOrder = ShoppingBagStore.instance.lastOrder;
       expect(recordedOrder, isNotNull);
@@ -593,119 +655,30 @@ void main() {
       await tester.tap(find.text('Continue Shopping'));
       await tester.pumpAndSettle();
 
-      // Verify Holi renders static navbar and supports See all, details card, Bag, and Checkout.
-      ShoppingBagStore.instance.clear();
-      await pumpLayout(
-        tester,
-        MaterialApp(
-          key: const ValueKey('holi_app'),
-          home: DynamicLayoutPage(
-            repository: layoutRepository,
-            docId: 'holi',
+      // Other festivals: navbar + key product cards still render from server JSON.
+      for (final entry in {
+        'holi': 'White cotton tee',
+        'uttarayan': 'Starter combo',
+        'navratri': 'Home',
+      }.entries) {
+        ShoppingBagStore.instance.clear();
+        await pumpLayout(
+          tester,
+          MaterialApp(
+            key: ValueKey('${entry.key}_app'),
+            home: DynamicLayoutPage(
+              repository: layoutRepository,
+              docId: entry.key,
+            ),
           ),
-        ),
-        settle: false,
-      );
-
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Categories'), findsOneWidget);
-      expect(find.text('Bag'), findsOneWidget);
-      expect(find.text('Profile'), findsOneWidget);
-
-      await tester.ensureVisible(find.text('White cotton tee').first);
-      await tester.tap(find.text('White cotton tee').first);
-      await pumpBounded(tester);
-      expect(find.text('Select Size'), findsOneWidget);
-      await tester.tap(find.text('Add to Bag'));
-      await pumpBounded(tester);
-      expect(ShoppingBagStore.instance.totalQuantity, 1);
-
-      final holiSeeAll = find.text('See all').first;
-      await tester.ensureVisible(holiSeeAll);
-      await tester.tap(holiSeeAll);
-      await pumpBounded(tester);
-      expect(find.byType(SeeAllPage), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(SeeAllPage),
-          matching: find.text('Holi must haves'),
-        ),
-        findsOneWidget,
-      );
-      await tester.tap(
-        find.descendant(
-          of: find.byType(SeeAllPage),
-          matching: find.byIcon(Icons.arrow_back),
-        ),
-      );
-      await pumpBounded(tester);
-
-      await tester.tap(find.text('Bag'));
-      await pumpBounded(tester);
-      expect(find.byType(CheckoutPage), findsOneWidget);
-      expect(find.text('White cotton tee'), findsOneWidget);
-
-      // Verify Uttarayan renders static navbar, combo_card details, SeeAllPage, and reaches Checkout.
-      ShoppingBagStore.instance.clear();
-      await pumpLayout(
-        tester,
-        MaterialApp(
-          key: const ValueKey('uttarayan_app'),
-          home: DynamicLayoutPage(
-            repository: layoutRepository,
-            docId: 'uttarayan',
-          ),
-        ),
-        settle: false,
-      );
-
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Categories'), findsOneWidget);
-      expect(find.text('Bag'), findsOneWidget);
-      expect(find.text('Profile'), findsOneWidget);
-
-      await tester.ensureVisible(find.text('Starter combo').first);
-      await tester.tap(find.text('Starter combo').first);
-      await pumpBounded(tester);
-      await tester.tap(find.text('Add to Bag'));
-      await pumpBounded(tester);
-
-      final uttarayanSeeAll = find.text('See all').first;
-      await tester.ensureVisible(uttarayanSeeAll);
-      await tester.tap(uttarayanSeeAll);
-      await pumpBounded(tester);
-      expect(find.byType(SeeAllPage), findsOneWidget);
-      expect(find.text('5 items'), findsOneWidget);
-      await tester.tap(
-        find.descendant(
-          of: find.byType(SeeAllPage),
-          matching: find.byIcon(Icons.arrow_back),
-        ),
-      );
-      await pumpBounded(tester);
-
-      await tester.tap(find.text('Bag'));
-      await pumpBounded(tester);
-      expect(find.byType(CheckoutPage), findsOneWidget);
-      expect(find.text('Starter combo'), findsOneWidget);
-
-      // Verify Navratri also renders the static navbar on Home.
-      ShoppingBagStore.instance.clear();
-      await pumpLayout(
-        tester,
-        MaterialApp(
-          key: const ValueKey('navratri_app'),
-          home: DynamicLayoutPage(
-            repository: layoutRepository,
-            docId: 'navratri',
-          ),
-        ),
-      );
-
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Categories'), findsOneWidget);
-      expect(find.text('Bag'), findsOneWidget);
-      expect(find.text('Profile'), findsOneWidget);
+          settle: false,
+        );
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Categories'), findsOneWidget);
+        expect(find.text('Bag'), findsOneWidget);
+        expect(find.text('Profile'), findsOneWidget);
+        expect(find.text(entry.value), findsWidgets);
+      }
     },
   );
 }

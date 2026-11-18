@@ -1,5 +1,6 @@
 {
   "id": "diwali",
+  "schemaVersion": 1,
   "title": "Home · Diwali",
   "background": "#F7F5F0",
   "showAppBar": false,
@@ -234,7 +235,7 @@
                 "children": [
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Kurtas", "sectionTitle": "Fashion · Kurtas" },
                     "children": [
                       {
                         "type": "image",
@@ -250,7 +251,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Sarees", "sectionTitle": "Fashion · Sarees" },
                     "children": [
                       {
                         "type": "image",
@@ -266,7 +267,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Diyas", "sectionTitle": "Decor · Diyas" },
                     "children": [
                       {
                         "type": "image",
@@ -282,7 +283,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Gift sets", "sectionTitle": "Gifts · Gift sets" },
                     "children": [
                       {
                         "type": "image",
@@ -298,7 +299,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Jewellery", "sectionTitle": "Gifts · Jewellery" },
                     "children": [
                       {
                         "type": "image",
@@ -314,7 +315,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Lights", "sectionTitle": "Decor · Lights" },
                     "children": [
                       {
                         "type": "image",
@@ -330,7 +331,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Menswear", "sectionTitle": "Fashion · Menswear" },
                     "children": [
                       {
                         "type": "image",
@@ -346,7 +347,7 @@
                   },
                   {
                     "type": "column",
-                    "props": { "gap": 4, "crossAxisAlignment": "center" },
+                    "props": { "gap": 4, "crossAxisAlignment": "center", "action": "open_category", "category": "Kids", "sectionTitle": "Fashion · Kids" },
                     "children": [
                       {
                         "type": "image",
@@ -390,14 +391,17 @@
                 }
               },
               {
-                "type": "text",
+                "type": "button",
                 "props": {
-                  "value": "See all",
+                  "label": "See all",
                   "fontSize": 12,
                   "bold": true,
-                  "color": "#5A554C",
+                  "textColor": "#5A554C",
+                  "color": "#00000000",
                   "action": "see_all",
-                  "sectionTitle": "Diwali picks"
+                  "sectionTitle": "Diwali picks",
+                  "category": "Diwali",
+                  "padding": { "left": 8, "right": 8, "top": 6, "bottom": 6 }
                 }
               }
             ]
@@ -412,40 +416,46 @@
               {
                 "type": "product_card",
                 "props": {
+                  "id": "silk_festive_kurta",
                   "width": 140,
                   "imageHeight": 120,
                   "imageUrl": "diwali/products/silk_festive_kurta.jpg",
-                  "brand": "Brand A",
+                  "brand": "Manyavar",
                   "title": "Silk festive kurta",
                   "price": "₹799",
                   "originalPrice": "₹1599",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["fashion", "diwali"]
                 }
               },
               {
                 "type": "product_card",
                 "props": {
+                  "id": "brass_diya_set",
                   "width": 140,
                   "imageHeight": 120,
                   "imageUrl": "diwali/products/brass_diya_set.jpg",
-                  "brand": "Brand B",
+                  "brand": "Pooja Essentials",
                   "title": "Brass diya set",
                   "price": "₹1299",
                   "originalPrice": "₹2599",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["decor", "gifts", "diwali"]
                 }
               },
               {
                 "type": "product_card",
                 "props": {
+                  "id": "gold_tone_watch",
                   "width": 140,
                   "imageHeight": 120,
                   "imageUrl": "diwali/products/gold_tone_watch.jpg",
-                  "brand": "Brand C",
+                  "brand": "Titan Festive",
                   "title": "Gold tone watch",
                   "price": "₹999",
                   "originalPrice": "₹1999",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["gifts", "diwali"]
                 }
               }
             ]
@@ -479,49 +489,57 @@
               {
                 "type": "product_card",
                 "props": {
+                  "id": "embroidered_kurta",
                   "imageHeight": 170,
                   "imageUrl": "diwali/products/embroidered_kurta.jpg",
-                  "brand": "Brand D",
+                  "brand": "Fabindia",
                   "title": "Embroidered kurta",
                   "price": "₹899",
                   "originalPrice": "₹1799",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["fashion", "diwali"]
                 }
               },
               {
                 "type": "product_card",
                 "props": {
+                  "id": "fairy_light_set",
                   "imageHeight": 170,
                   "imageUrl": "diwali/products/fairy_light_set.jpg",
-                  "brand": "Brand E",
+                  "brand": "Lumina",
                   "title": "Fairy light set",
                   "price": "₹399",
                   "originalPrice": "₹799",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["decor", "gifts", "diwali"]
                 }
               },
               {
                 "type": "product_card",
                 "props": {
+                  "id": "nehru_jacket",
                   "imageHeight": 170,
                   "imageUrl": "diwali/products/nehru_jacket.jpg",
-                  "brand": "Brand F",
+                  "brand": "Sojanya",
                   "title": "Nehru jacket",
                   "price": "₹1499",
                   "originalPrice": "₹2999",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["fashion", "diwali"]
                 }
               },
               {
                 "type": "product_card",
                 "props": {
+                  "id": "potli_bag",
                   "imageHeight": 170,
                   "imageUrl": "diwali/products/potli_bag.jpg",
-                  "brand": "Brand G",
+                  "brand": "Craft Villa",
                   "title": "Potli bag",
                   "price": "₹599",
                   "originalPrice": "₹1199",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["gifts", "fashion", "diwali"]
                 }
               }
             ]
