@@ -363,7 +363,8 @@
                   "title": "Mirror work choli",
                   "price": "\u20b91999",
                   "originalPrice": "\u20b93999",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["choli", "fashion", "navratri"]
                 }
               },
               {
@@ -378,7 +379,8 @@
                   "title": "Printed ghagra",
                   "price": "\u20b91499",
                   "originalPrice": "\u20b92999",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["ghagra", "fashion", "navratri"]
                 }
               },
               {
@@ -393,7 +395,8 @@
                   "title": "Kediyu set",
                   "price": "\u20b91199",
                   "originalPrice": "\u20b92399",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["kediyu", "fashion", "navratri"]
                 }
               },
               {
@@ -408,7 +411,8 @@
                   "title": "Oxidised necklace",
                   "price": "\u20b9499",
                   "originalPrice": "\u20b9999",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["jewellery", "accessories", "navratri"]
                 }
               }
             ]
@@ -474,7 +478,8 @@
                   "title": "Dandiya sticks",
                   "price": "\u20b9299",
                   "originalPrice": "\u20b9599",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["dandiya", "accessories", "navratri"]
                 }
               },
               {
@@ -490,7 +495,8 @@
                   "title": "Kolhapuri sandals",
                   "price": "\u20b9599",
                   "originalPrice": "\u20b91199",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["footwear", "fashion", "navratri"]
                 }
               },
               {
@@ -506,7 +512,8 @@
                   "title": "Batwa bag",
                   "price": "\u20b9449",
                   "originalPrice": "\u20b9899",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["accessories", "navratri"]
                 }
               }
             ]

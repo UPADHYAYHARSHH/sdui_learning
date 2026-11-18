@@ -255,7 +255,8 @@
                   "title": "Patang kite pack (50 pcs)",
                   "price": "\u20b9199",
                   "originalPrice": "\u20b9399",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["kites", "uttarayan"]
                 }
               },
               {
@@ -269,7 +270,8 @@
                   "title": "Cotton manja reel (9 cord)",
                   "price": "\u20b9349",
                   "originalPrice": "\u20b9699",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["manja", "uttarayan"]
                 }
               },
               {
@@ -283,7 +285,8 @@
                   "title": "Polarized UV sunglasses",
                   "price": "\u20b9499",
                   "originalPrice": "\u20b9999",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["shades", "accessories", "uttarayan"]
                 }
               }
             ]
@@ -318,7 +321,8 @@
               "subtitle": "10 Kites + 1 Manja Firki Reel",
               "price": "\u20b9499",
               "originalPrice": "\u20b9999",
-              "buttonText": "Add"
+              "buttonText": "Add",
+              "categories": ["combos", "kites", "manja", "uttarayan"]
             }
           },
           {
@@ -330,7 +334,8 @@
               "subtitle": "50 Kites + 2 Reels + Speaker & Shades",
               "price": "\u20b91,299",
               "originalPrice": "\u20b92,599",
-              "buttonText": "Add"
+              "buttonText": "Add",
+              "categories": ["combos", "kites", "manja", "shades", "uttarayan"]
             }
           }
         ]

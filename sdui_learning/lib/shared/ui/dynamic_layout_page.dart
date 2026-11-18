@@ -152,7 +152,10 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
       _actionRouter.openSearch(context, {
         ...data,
         'searchHint': _searchHintFor(_selectedCategory),
-        'products': _extractSduiProducts(_result?.root),
+        'products': _extractSduiProducts(
+          _result?.root,
+          festivalId: _result?.docId,
+        ),
       });
     }
   }
@@ -166,61 +169,134 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
   void _openSeeAll(Map<String, dynamic> data) {
     if (!mounted) return;
     final result = _result;
-    final isDiwali = result != null && _isDiwaliScreen(result);
 
     final rawTitle = (data['sectionTitle'] as String?)?.trim();
     final categoryFromData = (data['category'] as String?)?.trim();
-    final extracted = _extractSduiProducts(result?.root);
+    final festivalId =
+        (result?.data['id']?.toString() ?? result?.docId ?? 'diwali')
+            .toLowerCase();
+    final extracted =
+        _extractSduiProducts(result?.root, festivalId: festivalId);
+    final festivalCategories =
+        _extractSduiCategories(result?.root, extracted, festivalId);
 
-    if (isDiwali) {
-      // Prefer live chip selection over static sectionTitle/category in JSON.
-      final rawCategory = _selectedCategory.trim().isNotEmpty
-          ? _selectedCategory.trim()
-          : ((categoryFromData != null && categoryFromData.isNotEmpty)
-              ? categoryFromData
-              : 'Diwali');
-      final initialCategory =
-          rawCategory.toLowerCase() == 'diwali' ? 'All' : rawCategory;
-      var title = rawCategory.toLowerCase() == 'diwali'
-          ? ((rawTitle != null && rawTitle.isNotEmpty)
-              ? rawTitle
-              : 'Diwali picks')
-          : '$rawCategory picks';
-      if (_selectedMaxPrice != null) {
-        title = '$title · Under ₹$_selectedMaxPrice';
-      }
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => SeeAllPage(
-            title: title,
-            initialCategory: initialCategory,
-            initialMaxPrice: _selectedMaxPrice,
-            products: extracted,
-          ),
-        ),
-      );
-      return;
+    // Active category from live state or action payload
+    final rawCategory = _selectedCategory.trim().isNotEmpty
+        ? _selectedCategory.trim()
+        : ((categoryFromData != null && categoryFromData.isNotEmpty)
+            ? categoryFromData
+            : festivalId);
+
+    final isDefaultFestCategory =
+        rawCategory.toLowerCase() == festivalId ||
+        rawCategory.toLowerCase() == 'all';
+
+    final initialCategory =
+        isDefaultFestCategory ? 'All' : rawCategory;
+
+    var title = !isDefaultFestCategory
+        ? '$rawCategory picks'
+        : ((rawTitle != null && rawTitle.isNotEmpty)
+            ? rawTitle
+            : (result?.title.trim().isNotEmpty ?? false
+                ? '${result!.title.trim()} Picks'
+                : 'All Picks'));
+
+    if (_selectedMaxPrice != null) {
+      title = '$title · Under ₹$_selectedMaxPrice';
     }
 
-    final screenTitle = result?.title.trim();
-    final title = (rawTitle != null && rawTitle.isNotEmpty)
-        ? rawTitle
-        : (screenTitle != null && screenTitle.isNotEmpty
-            ? '$screenTitle Picks'
-            : 'All Picks');
+    final themeColor = _parseColor(
+      (result?.data['theme'] as Map?)?['primary']?.toString(),
+    );
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SeeAllPage(
           title: title,
-          initialCategory: 'All',
+          initialCategory: initialCategory,
+          initialMaxPrice: _selectedMaxPrice,
           products: extracted,
-          categories: const ['All'],
+          categories: festivalCategories,
+          themeColor: themeColor,
         ),
       ),
     );
   }
 
-  List<SeeAllProduct> _extractSduiProducts(Map<String, dynamic>? root) {
+  List<String> _extractSduiCategories(
+    Map<String, dynamic>? root,
+    List<SeeAllProduct> products,
+    String festivalId,
+  ) {
+    if (festivalId == 'diwali') {
+      return const ['All', 'Gifts', 'Decor', 'Fashion'];
+    }
+
+    final categoriesSet = <String>{};
+
+    // 1. Gather all categories present on extracted festival products
+    for (final p in products) {
+      for (final cat in p.categories) {
+        final lower = cat.toLowerCase().trim();
+        if (lower.isNotEmpty &&
+            lower != 'all' &&
+            lower != festivalId) {
+          categoriesSet.add(_capitalizeCategory(cat));
+        }
+      }
+    }
+
+    // 2. Scan the SDUI layout tree for category chips or action categories
+    if (root != null) {
+      void scan(Object? node) {
+        if (node is! Map) return;
+        final props = node['props'];
+        if (props is Map) {
+          final action = props['action']?.toString();
+          if (action == 'select_category' ||
+              action == 'filter_category' ||
+              action == 'open_category') {
+            final c = props['category']?.toString() ?? props['label']?.toString();
+            if (c != null &&
+                c.trim().isNotEmpty &&
+                c.trim().toLowerCase() != festivalId &&
+                c.trim().toLowerCase() != 'all') {
+              categoriesSet.add(_capitalizeCategory(c.trim()));
+            }
+          }
+        }
+        if (node['child'] is Map) scan(node['child']);
+        final children = node['children'];
+        if (children is List) {
+          for (final ch in children) {
+            scan(ch);
+          }
+        }
+      }
+
+      scan(root);
+    }
+
+    if (categoriesSet.isEmpty) {
+      return const ['All'];
+    }
+
+    return ['All', ...categoriesSet];
+  }
+
+  static String _capitalizeCategory(String text) {
+    if (text.isEmpty) return text;
+    return text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
+  }
+
+  List<SeeAllProduct> _extractSduiProducts(
+    Map<String, dynamic>? root, {
+    String? festivalId,
+  }) {
     if (root == null) return const [];
     final found = <SeeAllProduct>[];
     final seenTitles = <String>{};
@@ -238,6 +314,7 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
         final parsed = SeeAllProduct.fromCardProps(
           props,
           id: props['id']?.toString() ?? 'sdui_${found.length}',
+          festivalId: festivalId,
         );
         if (parsed != null && seenTitles.add(parsed.title.toLowerCase())) {
           found.add(parsed);

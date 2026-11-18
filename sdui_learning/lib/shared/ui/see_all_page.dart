@@ -32,6 +32,7 @@ class SeeAllProduct {
   static SeeAllProduct? fromCardProps(
     Map<String, dynamic> props, {
     required String id,
+    String? festivalId,
   }) {
     final title = (props['title'] as String? ?? '').trim();
     if (title.isEmpty) return null;
@@ -45,16 +46,112 @@ class SeeAllProduct {
       if (pct > 0) discount = '$pct% off';
     }
     final rawCats = props['categories'] ?? props['category'];
-    final categories = <String>['diwali'];
+    final categories = <String>[];
     if (rawCats is List) {
-      categories
-        ..clear()
-        ..addAll(rawCats.map((e) => e.toString().toLowerCase()));
+      categories.addAll(
+        rawCats
+            .map((e) => e.toString().trim().toLowerCase())
+            .where((e) => e.isNotEmpty),
+      );
     } else if (rawCats != null && rawCats.toString().trim().isNotEmpty) {
-      categories
-        ..clear()
-        ..add(rawCats.toString().toLowerCase());
+      categories.add(rawCats.toString().trim().toLowerCase());
     }
+
+    final cleanFest = (festivalId ?? '').trim().toLowerCase();
+    if (cleanFest.isNotEmpty && !categories.contains(cleanFest)) {
+      categories.add(cleanFest);
+    }
+
+    final lowerTitle = title.toLowerCase();
+    void addTag(String tag) {
+      if (!categories.contains(tag)) categories.add(tag);
+    }
+
+    if (lowerTitle.contains('kurta') ||
+        lowerTitle.contains('tee') ||
+        lowerTitle.contains('shirt') ||
+        lowerTitle.contains('choli') ||
+        lowerTitle.contains('ghagra') ||
+        lowerTitle.contains('kediyu') ||
+        lowerTitle.contains('jacket') ||
+        lowerTitle.contains('saree') ||
+        lowerTitle.contains('wear')) {
+      addTag('fashion');
+    }
+    if (lowerTitle.contains('tee') || lowerTitle.contains('kurta')) {
+      addTag('looks');
+    }
+    if (lowerTitle.contains('diya') ||
+        lowerTitle.contains('light') ||
+        lowerTitle.contains('candle')) {
+      addTag('decor');
+    }
+    if (lowerTitle.contains('gift') ||
+        lowerTitle.contains('pack') ||
+        lowerTitle.contains('hamper') ||
+        lowerTitle.contains('thali')) {
+      addTag('gifts');
+    }
+    if (lowerTitle.contains('colour') ||
+        lowerTitle.contains('gulal') ||
+        lowerTitle.contains('herbal')) {
+      addTag('colours');
+      addTag('safe play');
+    }
+    if (lowerTitle.contains('pichkari') ||
+        lowerTitle.contains('water') ||
+        lowerTitle.contains('cap') ||
+        lowerTitle.contains('bucket')) {
+      addTag('pichkaris');
+      addTag('party');
+      addTag('safe play');
+    }
+    if (lowerTitle.contains('sun') ||
+        lowerTitle.contains('skin') ||
+        lowerTitle.contains('shield')) {
+      addTag('skin care');
+      addTag('safe play');
+    }
+    if (lowerTitle.contains('kite') || lowerTitle.contains('patang')) {
+      addTag('kites');
+    }
+    if (lowerTitle.contains('manja') ||
+        lowerTitle.contains('reel') ||
+        lowerTitle.contains('cord')) {
+      addTag('manja');
+    }
+    if (lowerTitle.contains('sunglass') ||
+        lowerTitle.contains('shades') ||
+        lowerTitle.contains('uv')) {
+      addTag('shades');
+      addTag('accessories');
+    }
+    if (lowerTitle.contains('choli')) addTag('choli');
+    if (lowerTitle.contains('ghagra')) addTag('ghagra');
+    if (lowerTitle.contains('kediyu')) addTag('kediyu');
+    if (lowerTitle.contains('necklace') || lowerTitle.contains('jewel')) {
+      addTag('jewellery');
+      addTag('accessories');
+    }
+    if (lowerTitle.contains('dandiya')) {
+      addTag('dandiya');
+      addTag('accessories');
+    }
+    if (lowerTitle.contains('sandals') || lowerTitle.contains('footwear')) {
+      addTag('footwear');
+      addTag('fashion');
+    }
+    if (lowerTitle.contains('bag') || lowerTitle.contains('batwa')) {
+      addTag('accessories');
+    }
+    if (lowerTitle.contains('combo')) {
+      addTag('combos');
+    }
+
+    if (categories.isEmpty) {
+      categories.add(cleanFest.isNotEmpty ? cleanFest : 'diwali');
+    }
+
     return SeeAllProduct(
       id: id,
       brand: (props['brand'] as String? ?? 'Festive').trim(),
@@ -89,14 +186,16 @@ class SeeAllPage extends StatefulWidget {
     this.initialCategory = 'All',
     this.initialMaxPrice,
     this.products,
-    this.categories = const ['All', 'Gifts', 'Decor', 'Fashion'],
+    this.categories,
+    this.themeColor,
   });
 
   final String title;
   final String initialCategory;
   final int? initialMaxPrice;
   final List<SeeAllProduct>? products;
-  final List<String> categories;
+  final List<String>? categories;
+  final Color? themeColor;
 
   @override
   State<SeeAllPage> createState() => _SeeAllPageState();
@@ -118,10 +217,48 @@ class _SeeAllPageState extends State<SeeAllPage> {
 
   List<SeeAllProduct> get _baseProducts => widget.products ?? const [];
 
+  List<String> get _categories {
+    final explicit = widget.categories;
+    if (explicit != null && explicit.isNotEmpty) {
+      if (explicit.length > 1) return explicit;
+      final derived = _deriveCategories();
+      if (derived.length > 1) return derived;
+      return explicit;
+    }
+    final derived = _deriveCategories();
+    if (derived.length > 1) return derived;
+    return const ['All'];
+  }
+
+  List<String> _deriveCategories() {
+    final knownFestivals = {'diwali', 'holi', 'navratri', 'uttarayan'};
+    final set = <String>{};
+    for (final p in _baseProducts) {
+      for (final c in p.categories) {
+        final lower = c.trim().toLowerCase();
+        if (lower.isEmpty || lower == 'all' || knownFestivals.contains(lower)) {
+          continue;
+        }
+        set.add(_capitalize(c.trim()));
+      }
+    }
+    if (set.isEmpty) return const ['All'];
+    return ['All', ...set];
+  }
+
+  static String _capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
+  }
+
   @override
   void initState() {
     super.initState();
-    _selectedCategory = widget.categories.isEmpty
+    final catList = _categories;
+    _selectedCategory = catList.isEmpty
         ? 'All'
         : _matchCategory(widget.initialCategory);
     _maxPrice = widget.initialMaxPrice;
@@ -150,17 +287,17 @@ class _SeeAllPageState extends State<SeeAllPage> {
 
   String _matchCategory(String raw) {
     final normalized = raw.trim().toLowerCase();
-    for (final cat in widget.categories) {
+    for (final cat in _categories) {
       if (cat.toLowerCase() == normalized) return cat;
     }
-    return widget.categories.first;
+    return _categories.first;
   }
 
   List<SeeAllProduct> get _filteredProducts {
     final cat = _selectedCategory.toLowerCase();
 
     final list = _baseProducts.where((p) {
-      if (widget.categories.isNotEmpty && cat != 'all') {
+      if (_categories.length > 1 && cat != 'all') {
         if (!p.categories.contains(cat)) return false;
       }
       if (_maxPrice != null && p.price > _maxPrice!) return false;
@@ -219,7 +356,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
 
   void _resetFilters() {
     setState(() {
-      _selectedCategory = widget.categories.isEmpty ? 'All' : 'All';
+      _selectedCategory = 'All';
       _maxPrice = null;
       _sortBy = 'Featured';
     });
@@ -274,6 +411,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
   }
 
   Widget _buildFiltersBar() {
+    final catList = _categories;
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -281,15 +419,15 @@ class _SeeAllPageState extends State<SeeAllPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.categories.length > 1)
+          if (catList.length > 1)
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Row(
                 children: [
-                  for (var i = 0; i < widget.categories.length; i++) ...[
+                  for (var i = 0; i < catList.length; i++) ...[
                     if (i > 0) const SizedBox(width: 8),
-                    _buildCategoryChip(widget.categories[i]),
+                    _buildCategoryChip(catList[i]),
                   ],
                 ],
               ),
@@ -316,13 +454,14 @@ class _SeeAllPageState extends State<SeeAllPage> {
   Widget _buildCategoryChip(String category) {
     final selected =
         _selectedCategory.toLowerCase() == category.toLowerCase();
+    final activeBg = widget.themeColor ?? const Color(0xFF14120F);
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () => setState(() => _selectedCategory = category),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF14120F) : Colors.white,
+          color: selected ? activeBg : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: selected ? Colors.transparent : const Color(0xFFD8D2C6),
@@ -343,6 +482,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
   Widget _buildPriceChip(int? price) {
     final selected = _maxPrice == price;
     final label = price == null ? 'All Prices' : 'Under ₹$price';
+    final activeBg = widget.themeColor ?? const Color(0xFF14120F);
     return InkWell(
       borderRadius: BorderRadius.circular(14),
       onTap: () {
@@ -357,7 +497,7 @@ class _SeeAllPageState extends State<SeeAllPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF14120F) : const Color(0xFFF7F5F0),
+          color: selected ? activeBg : const Color(0xFFF7F5F0),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: selected ? const Color(0xFFE8B84B) : const Color(0xFFE2DDD2),
@@ -378,13 +518,14 @@ class _SeeAllPageState extends State<SeeAllPage> {
 
   Widget _buildSortChip() {
     final active = _sortBy != 'Featured';
+    final activeBg = widget.themeColor ?? const Color(0xFFC8321A);
     return InkWell(
       borderRadius: BorderRadius.circular(14),
       onTap: _showSortSheet,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFFC8321A) : const Color(0xFFF7F5F0),
+          color: active ? activeBg : const Color(0xFFF7F5F0),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: active ? Colors.transparent : const Color(0xFFE2DDD2),

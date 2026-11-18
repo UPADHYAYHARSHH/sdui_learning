@@ -386,7 +386,8 @@
                   "title": "White cotton tee",
                   "price": "\u20b9299",
                   "originalPrice": "\u20b9599",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["looks", "fashion", "holi"]
                 }
               },
               {
@@ -399,7 +400,8 @@
                   "title": "Herbal colour set",
                   "price": "\u20b9199",
                   "originalPrice": "\u20b9399",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["safe play", "colours", "holi"]
                 }
               },
               {
@@ -412,7 +414,8 @@
                   "title": "Pressure pichkari",
                   "price": "\u20b9149",
                   "originalPrice": "\u20b9299",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["safe play", "party", "holi"]
                 }
               },
               {
@@ -425,7 +428,8 @@
                   "title": "Holi kurta set",
                   "price": "\u20b9799",
                   "originalPrice": "\u20b91599",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["looks", "fashion", "holi"]
                 }
               },
               {
@@ -438,7 +442,8 @@
                   "title": "Sun & skin shield",
                   "price": "\u20b9349",
                   "originalPrice": "\u20b9699",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["skin care", "safe play", "holi"]
                 }
               },
               {
@@ -451,7 +456,8 @@
                   "title": "Water bucket cap",
                   "price": "\u20b9199",
                   "originalPrice": "\u20b9399",
-                  "discount": "50% off"
+                  "discount": "50% off",
+                  "categories": ["party", "looks", "accessories", "holi"]
                 }
               }
             ]

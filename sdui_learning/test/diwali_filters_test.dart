@@ -138,12 +138,6 @@ void main() {
     await tester.pump(Duration(milliseconds: settle ? 300 : 100));
   }
 
-  Future<void> pumpBounded(WidgetTester tester) async {
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 350));
-    await tester.pump();
-  }
-
   testWidgets(
     'Diwali screen switches categories and selects only one price filter at a time',
     (tester) async {
@@ -404,6 +398,153 @@ void main() {
         scrollable: gridScrollable,
       );
       expect(find.text('Batwa bag'), findsOneWidget);
+
+      // Dynamic Navratri category filter chips are displayed and functional
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Choli'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Dandiya'),
+        ),
+        findsOneWidget,
+      );
+
+      // Tapping Choli filters to Mirror work choli
+      await tester.tap(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Choli'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Mirror work choli'), findsOneWidget);
+      expect(find.text('Dandiya sticks'), findsNothing);
+
+      // Reset to All
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byType(SeeAllPage),
+              matching: find.text('All'),
+            )
+            .first,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Mirror work choli'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Holi and Uttarayan screens open SeeAllPage with festival dynamic categories and products',
+    (tester) async {
+      // Holi:
+      await pumpLayout(
+        tester,
+        MaterialApp(
+          home: DynamicLayoutPage(
+            repository: layoutRepository,
+            docId: 'holi',
+          ),
+        ),
+      );
+
+      final holiSeeAll = find
+          .ancestor(
+            of: find.text('See all'),
+            matching: find.byType(InkWell),
+          )
+          .first;
+      await tester.ensureVisible(holiSeeAll);
+      await tester.tap(holiSeeAll);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SeeAllPage), findsOneWidget);
+      expect(find.text('Holi must haves'), findsOneWidget);
+      expect(find.text('White cotton tee'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Looks'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Safe Play'),
+        ),
+        findsOneWidget,
+      );
+
+      // Tap Safe Play
+      await tester.tap(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Safe Play'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Herbal colour set'), findsOneWidget);
+      expect(find.text('White cotton tee'), findsNothing);
+
+      Navigator.of(tester.element(find.byType(SeeAllPage))).pop();
+      await tester.pumpAndSettle();
+
+      // Uttarayan:
+      await pumpLayout(
+        tester,
+        MaterialApp(
+          home: DynamicLayoutPage(
+            repository: layoutRepository,
+            docId: 'uttarayan',
+          ),
+        ),
+      );
+
+      final uttarayanSeeAll = find
+          .ancestor(
+            of: find.text('See all'),
+            matching: find.byType(InkWell),
+          )
+          .first;
+      await tester.ensureVisible(uttarayanSeeAll);
+      await tester.tap(uttarayanSeeAll);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SeeAllPage), findsOneWidget);
+      expect(find.text('Kite day picks'), findsOneWidget);
+      expect(find.text('Patang kite pack (50 pcs)'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Kites'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Manja'),
+        ),
+        findsOneWidget,
+      );
+
+      // Tap Kites
+      await tester.tap(
+        find.descendant(
+          of: find.byType(SeeAllPage),
+          matching: find.text('Kites'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Patang kite pack (50 pcs)'), findsOneWidget);
+      expect(find.text('Cotton manja reel (9 cord)'), findsNothing);
     },
   );
 
