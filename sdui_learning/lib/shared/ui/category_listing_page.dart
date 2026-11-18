@@ -53,16 +53,28 @@ class CategoryListingPage extends StatefulWidget {
     this.initialSort = 'Sort',
     this.title = 'Women · Kurtas',
     this.category,
+    this.searchHint,
+    this.initialSearchOpen = false,
+    this.products,
   });
 
   final LayoutRepository? repository;
   final String initialSort;
 
-  /// App-bar / header title (from SDUI `open_category`).
+  /// App-bar / header title (from SDUI `open_category` or `open_search`).
   final String title;
 
   /// Optional category hint used for analytics / future catalog queries.
   final String? category;
+
+  /// Optional search hint used for the search bar.
+  final String? searchHint;
+
+  /// Whether the search bar should be automatically open on entry.
+  final bool initialSearchOpen;
+
+  /// Optional custom product list (falls back to default kurtas if null or empty).
+  final List<KurtaProduct>? products;
 
   @override
   State<CategoryListingPage> createState() => _CategoryListingPageState();
@@ -156,9 +168,14 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   String? _selectedSize;
   String? _selectedBrand;
   int? _maxPrice;
-  bool _searchOpen = false;
+  late bool _searchOpen;
   final TextEditingController _searchController = TextEditingController();
   int _activeNavIndex = 1; // 1 = Categories
+
+  List<KurtaProduct> get _sourceProducts =>
+      widget.products != null && widget.products!.isNotEmpty
+          ? widget.products!
+          : _allProducts;
 
   bool get _promoApplied => ShoppingBagStore.instance.promoApplied;
 
@@ -173,6 +190,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   void initState() {
     super.initState();
     _currentSort = widget.initialSort;
+    _searchOpen = widget.initialSearchOpen;
     ShoppingBagStore.instance.addListener(_onBagStoreChanged);
   }
 
@@ -184,7 +202,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   }
 
   List<KurtaProduct> get _filteredProducts {
-    var list = List<KurtaProduct>.from(_allProducts);
+    var list = List<KurtaProduct>.from(_sourceProducts);
 
     final query = _searchController.text.trim().toLowerCase();
     if (query.isNotEmpty) {
@@ -477,7 +495,7 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
   void _showBrandSheet() {
     final brands = [
       'All',
-      ...{for (final p in _allProducts) p.brand},
+      ...{for (final p in _sourceProducts) p.brand},
     ];
 
     showModalBottomSheet<void>(
@@ -675,7 +693,8 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                       controller: _searchController,
                       autofocus: true,
                       decoration: InputDecoration(
-                        hintText: 'Search kurtas, brands...',
+                        hintText:
+                            widget.searchHint ?? 'Search kurtas, brands...',
                         filled: true,
                         fillColor: const Color(0xFFF7F5F0),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -758,6 +777,40 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                       ),
                     ),
                     const SizedBox(height: 12),
+
+                    // Empty state if no products match
+                    if (products.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 40),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.search_off_rounded,
+                                  size: 48, color: Color(0xFF8A857A)),
+                              const SizedBox(height: 12),
+                              Text(
+                                'No products found',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF14120F),
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Try searching for another product or brand.',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 13,
+                                  color: const Color(0xFF5A554C),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
                     // First Product Grid (2 columns)
                     if (topProducts.isNotEmpty)
@@ -971,17 +1024,31 @@ class _CategoryListingPageState extends State<CategoryListingPage> {
                     height: 190,
                     width: double.infinity,
                     color: product.placeholderColor,
-                    child: Image.asset(
-                      product.imagePath,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: product.placeholderColor,
-                          alignment: Alignment.center,
-                          child: const Icon(Icons.image, color: Colors.white70, size: 40),
-                        );
-                      },
-                    ),
+                    child: product.imagePath.startsWith('http')
+                        ? Image.network(
+                            product.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: product.placeholderColor,
+                                alignment: Alignment.center,
+                                child: const Icon(Icons.image,
+                                    color: Colors.white70, size: 40),
+                              );
+                            },
+                          )
+                        : Image.asset(
+                            product.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: product.placeholderColor,
+                                alignment: Alignment.center,
+                                child: const Icon(Icons.image,
+                                    color: Colors.white70, size: 40),
+                              );
+                            },
+                          ),
                   ),
                 ),
                 const SizedBox(height: 6),

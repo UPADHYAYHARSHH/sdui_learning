@@ -822,5 +822,39 @@ void main() {
       }
     },
   );
+
+  testWidgets(
+    'Tapping on search field on home screen navigates to CategoryListingPage where user can search products',
+    (tester) async {
+      await pumpLayout(
+        tester,
+        MaterialApp(
+          home: DynamicLayoutPage(
+            repository: layoutRepository,
+            docId: 'diwali',
+          ),
+        ),
+      );
+
+      // Verify the home screen has the search box with its hint
+      final searchBoxFinder = find.text('Search diyas, kurtas, gifts');
+      expect(searchBoxFinder, findsOneWidget);
+
+      // Tap on search field
+      await tester.tap(searchBoxFinder);
+      await tester.pumpAndSettle();
+
+      // Navigated to CategoryListingPage with search bar open
+      expect(find.byType(CategoryListingPage), findsOneWidget);
+      expect(find.byType(TextField), findsOneWidget);
+
+      // Search for a product
+      await tester.enterText(find.byType(TextField), 'kurta');
+      await tester.pumpAndSettle();
+
+      // Matching products found
+      expect(find.textContaining(RegExp(r'kurta', caseSensitive: false)), findsWidgets);
+    },
+  );
 }
 

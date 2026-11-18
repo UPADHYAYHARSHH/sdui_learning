@@ -116,30 +116,50 @@ mixin _SduiFestivalBuilders on _SduiBuilderCore {
                           ),
                         ],
                       ),
-                      Container(
-                        height: 44,
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
                           borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.search_rounded,
-                              size: 20,
-                              color: Color(0xFF5A554C),
+                          onTap: () => _dispatchTapAction(
+                            context,
+                            props['action'] as String? ?? 'open_search',
+                            {
+                              ...props,
+                              'searchHint': searchHint,
+                              'hint': searchHint,
+                              'festival': festival,
+                            },
+                          ),
+                          child: Container(
+                            height: 44,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              searchHint,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 14,
-                                color: const Color(0xFF5A554C),
-                                fontWeight: FontWeight.w500,
-                              ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.search_rounded,
+                                  size: 20,
+                                  color: Color(0xFF5A554C),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    searchHint,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 14,
+                                      color: const Color(0xFF5A554C),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ],

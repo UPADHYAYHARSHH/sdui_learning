@@ -148,12 +148,19 @@ class _DynamicLayoutPageState extends State<DynamicLayoutPage> {
     } else if (action == 'see_all' || action == 'open_see_all') {
       _openSeeAll(data);
     } else if (action == 'open_search') {
+      final hint =
+          (data['searchHint'] as String? ?? data['hint'] as String?)?.trim();
+      final festivalId =
+          (_result?.data['id']?.toString() ?? _result?.docId ?? 'diwali')
+              .toLowerCase();
       _actionRouter.openSearch(context, {
         ...data,
-        'searchHint': _searchHintFor(_selectedCategory ?? 'all'),
+        'searchHint': (hint != null && hint.isNotEmpty)
+            ? hint
+            : _searchHintFor(_selectedCategory ?? 'all'),
         'products': _extractSduiProducts(
           _result?.root,
-          festivalId: _result?.docId,
+          festivalId: festivalId,
         ),
       });
     }

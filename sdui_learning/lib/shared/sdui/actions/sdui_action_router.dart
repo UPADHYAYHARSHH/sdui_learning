@@ -155,87 +155,44 @@ class SduiActionRouter {
   }
 
   void openSearch(BuildContext context, [Map<String, dynamic> props = const {}]) {
-    _openLocalSearchSheet(context, props);
-  }
-
-  void _openLocalSearchSheet(BuildContext context, Map<String, dynamic> props) {
+    final category = (props['category'] as String? ??
+            props['label'] as String? ??
+            props['title'] as String?)
+        ?.trim();
     final hint = (props['searchHint'] as String? ??
             props['hint'] as String? ??
             'Search products')
         .trim();
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    final title = (props['sectionTitle'] as String? ??
+            (category != null && category.isNotEmpty ? category : 'Search'))
+        .trim();
+
+    final catalog = _productsFromProps(props);
+    final convertedProducts = catalog.isNotEmpty
+        ? catalog
+            .map((p) => KurtaProduct(
+                  id: p.id,
+                  brand: p.brand,
+                  title: p.title,
+                  price: p.price,
+                  originalPrice: p.originalPrice,
+                  discount: p.discount,
+                  imagePath: p.imageUrl,
+                  placeholderColor: const Color(0xFFE9C9B8),
+                ))
+            .toList()
+        : null;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => CategoryListingPage(
+          title: title.isEmpty ? 'Search' : title,
+          category: category,
+          searchHint: hint,
+          initialSearchOpen: true,
+          products: convertedProducts,
+        ),
       ),
-      builder: (ctx) {
-        final controller = TextEditingController();
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.viewInsetsOf(ctx).bottom + 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Search',
-                style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: controller,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: hint,
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                textInputAction: TextInputAction.search,
-                onSubmitted: (query) {
-                  Navigator.pop(ctx);
-                  final q = query.trim();
-                  if (q.isEmpty) return;
-                  final catalog = _productsFromProps(props);
-                  final lower = q.toLowerCase();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => SeeAllPage(
-                        title: 'Results for "$q"',
-                        initialCategory: 'All',
-                        products: catalog
-                            .where(
-                              (p) =>
-                                  p.title.toLowerCase().contains(lower) ||
-                                  p.brand.toLowerCase().contains(lower),
-                            )
-                            .toList(),
-                        categories: const ['All'],
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Type a product or brand, then press search.',
-                style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                      color: const Color(0xFF5A554C),
-                    ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
